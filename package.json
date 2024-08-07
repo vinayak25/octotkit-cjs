@@ -1,0 +1,20 @@
+{
+  "name": "@hanalabs/octokit-cjs",
+  "version": "4.0.2",
+  "description": "CommonJS Module for Octokit JS",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "scripts": {
+    "build": "esbuild ./index.ts --platform=node --bundle --format=cjs --outfile=index.js",
+    "prepublish:npm": "npm run build",
+    "publish:npm": "npm publish --access public"
+  },
+  "author": "Vinayak Sarawagi <vinayaksarawagi25@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "octokit": "^4.0.2"
+  },
+  "devDependencies": {
+    "esbuild": "^0.18.16"
+  }
+}
