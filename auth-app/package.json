@@ -1,7 +1,7 @@
 {
-  "name": "octokit-cjs",
-  "version": "4.0.2",
-  "description": "CommonJS Module for Octokit JS",
+  "name": "@octokit-cjs/auth-app",
+  "version": "7.1.0",
+  "description": "CommonJS Module for Octokit JS Auth App",
   "main": "./index.js",
   "types": "./index.d.ts",
   "scripts": {
@@ -12,8 +12,8 @@
   "author": "Vinayak Sarawagi <vinayaksarawagi25@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "octokit": "^4.0.2"
+    "@octokit/auth-app": "^7.1.0",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "esbuild": "^0.18.16"
