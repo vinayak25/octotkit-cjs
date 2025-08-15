@@ -19,7 +19,6 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
-var __reExport = (target, mod, secondTarget) => (__copyProps(target, mod, "default"), secondTarget && __copyProps(secondTarget, mod, "default"));
 var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
   // If the importer is in node compatibility mode or this is not an ESM
   // file that has been converted to a CommonJS file using a Babel-
@@ -30,12 +29,108 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
+// node_modules/fast-content-type-parse/index.js
+var require_fast_content_type_parse = __commonJS({
+  "node_modules/fast-content-type-parse/index.js"(exports2, module2) {
+    "use strict";
+    var NullObject = function NullObject2() {
+    };
+    NullObject.prototype = /* @__PURE__ */ Object.create(null);
+    var paramRE = /; *([!#$%&'*+.^\w`|~-]+)=("(?:[\v\u0020\u0021\u0023-\u005b\u005d-\u007e\u0080-\u00ff]|\\[\v\u0020-\u00ff])*"|[!#$%&'*+.^\w`|~-]+) */gu;
+    var quotedPairRE = /\\([\v\u0020-\u00ff])/gu;
+    var mediaTypeRE = /^[!#$%&'*+.^\w|~-]+\/[!#$%&'*+.^\w|~-]+$/u;
+    var defaultContentType = { type: "", parameters: new NullObject() };
+    Object.freeze(defaultContentType.parameters);
+    Object.freeze(defaultContentType);
+    function parse2(header) {
+      if (typeof header !== "string") {
+        throw new TypeError("argument header is required and must be a string");
+      }
+      let index = header.indexOf(";");
+      const type = index !== -1 ? header.slice(0, index).trim() : header.trim();
+      if (mediaTypeRE.test(type) === false) {
+        throw new TypeError("invalid media type");
+      }
+      const result = {
+        type: type.toLowerCase(),
+        parameters: new NullObject()
+      };
+      if (index === -1) {
+        return result;
+      }
+      let key;
+      let match;
+      let value;
+      paramRE.lastIndex = index;
+      while (match = paramRE.exec(header)) {
+        if (match.index !== index) {
+          throw new TypeError("invalid parameter format");
+        }
+        index += match[0].length;
+        key = match[1].toLowerCase();
+        value = match[2];
+        if (value[0] === '"') {
+          value = value.slice(1, value.length - 1);
+          quotedPairRE.test(value) && (value = value.replace(quotedPairRE, "$1"));
+        }
+        result.parameters[key] = value;
+      }
+      if (index !== header.length) {
+        throw new TypeError("invalid parameter format");
+      }
+      return result;
+    }
+    function safeParse2(header) {
+      if (typeof header !== "string") {
+        return defaultContentType;
+      }
+      let index = header.indexOf(";");
+      const type = index !== -1 ? header.slice(0, index).trim() : header.trim();
+      if (mediaTypeRE.test(type) === false) {
+        return defaultContentType;
+      }
+      const result = {
+        type: type.toLowerCase(),
+        parameters: new NullObject()
+      };
+      if (index === -1) {
+        return result;
+      }
+      let key;
+      let match;
+      let value;
+      paramRE.lastIndex = index;
+      while (match = paramRE.exec(header)) {
+        if (match.index !== index) {
+          return defaultContentType;
+        }
+        index += match[0].length;
+        key = match[1].toLowerCase();
+        value = match[2];
+        if (value[0] === '"') {
+          value = value.slice(1, value.length - 1);
+          quotedPairRE.test(value) && (value = value.replace(quotedPairRE, "$1"));
+        }
+        result.parameters[key] = value;
+      }
+      if (index !== header.length) {
+        return defaultContentType;
+      }
+      return result;
+    }
+    module2.exports.default = { parse: parse2, safeParse: safeParse2 };
+    module2.exports.parse = parse2;
+    module2.exports.safeParse = safeParse2;
+    module2.exports.defaultContentType = defaultContentType;
+  }
+});
+
 // node_modules/bottleneck/light.js
 var require_light = __commonJS({
-  "node_modules/bottleneck/light.js"(exports, module2) {
+  "node_modules/bottleneck/light.js"(exports2, module2) {
     (function(global2, factory) {
-      typeof exports === "object" && typeof module2 !== "undefined" ? module2.exports = factory() : typeof define === "function" && define.amd ? define(factory) : global2.Bottleneck = factory();
-    })(exports, function() {
+      typeof exports2 === "object" && typeof module2 !== "undefined" ? module2.exports = factory() : typeof define === "function" && define.amd ? define(factory) : global2.Bottleneck = factory();
+    })(exports2, (function() {
       "use strict";
       var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
       function getCjsExportFromNamespace(n) {
@@ -239,18 +334,18 @@ var require_light = __commonJS({
           var i;
           this.Events = new Events$1(this);
           this._length = 0;
-          this._lists = function() {
+          this._lists = (function() {
             var j, ref, results;
             results = [];
             for (i = j = 1, ref = num_priorities; 1 <= ref ? j <= ref : j >= ref; i = 1 <= ref ? ++j : --j) {
-              results.push(new DLList$1(() => {
+              results.push(new DLList$1((() => {
                 return this.incr();
-              }, () => {
+              }), (() => {
                 return this.decr();
-              }));
+              })));
             }
             return results;
-          }.call(this);
+          }).call(this);
         }
         incr() {
           if (this._length++ === 0) {
@@ -674,10 +769,10 @@ var require_light = __commonJS({
           }
         }
         statusCounts() {
-          return this.counts.reduce((acc, v, i) => {
+          return this.counts.reduce(((acc, v, i) => {
             acc[this.status[i]] = v;
             return acc;
-          }, {});
+          }), {});
         }
       };
       var States_1 = States;
@@ -699,7 +794,7 @@ var require_light = __commonJS({
           if (this._running < 1 && this._queue.length > 0) {
             this._running++;
             ({ task, args, resolve, reject } = this._queue.shift());
-            cb = await async function() {
+            cb = await (async function() {
               try {
                 returned = await task(...args);
                 return function() {
@@ -711,7 +806,7 @@ var require_light = __commonJS({
                   return reject(error);
                 };
               }
-            }();
+            })();
             this._running--;
             this._tryToRun();
             return cb();
@@ -747,7 +842,7 @@ var require_light = __commonJS({
       RedisConnection$1 = require$$2;
       IORedisConnection$1 = require$$3;
       Scripts$1 = require$$4;
-      Group = function() {
+      Group = (function() {
         class Group2 {
           constructor(limiterOptions = {}) {
             this.deleteKey = this.deleteKey.bind(this);
@@ -871,12 +966,12 @@ var require_light = __commonJS({
           id: "group-key"
         };
         return Group2;
-      }.call(commonjsGlobal);
+      }).call(commonjsGlobal);
       var Group_1 = Group;
       var Batcher, Events$3, parser$4;
       parser$4 = parser;
       Events$3 = Events_1;
-      Batcher = function() {
+      Batcher = (function() {
         class Batcher2 {
           constructor(options = {}) {
             this.options = options;
@@ -919,7 +1014,7 @@ var require_light = __commonJS({
           Promise
         };
         return Batcher2;
-      }.call(commonjsGlobal);
+      }).call(commonjsGlobal);
       var Batcher_1 = Batcher;
       var require$$4$1 = () => console.log("You must import the full version of Bottleneck in order to use this feature.");
       var require$$8 = getCjsExportFromNamespace(version$2);
@@ -934,7 +1029,7 @@ var require_light = __commonJS({
       Events$4 = Events_1;
       States$1 = States_1;
       Sync$1 = Sync_1;
-      Bottleneck2 = function() {
+      Bottleneck2 = (function() {
         class Bottleneck3 {
           constructor(options = {}, ...invalid) {
             var storeInstanceOptions, storeOptions;
@@ -949,7 +1044,7 @@ var require_light = __commonJS({
             this._submitLock = new Sync$1("submit", this.Promise);
             this._registerLock = new Sync$1("register", this.Promise);
             storeOptions = parser$5.load(options, this.storeDefaults, {});
-            this._store = function() {
+            this._store = (function() {
               if (this.datastore === "redis" || this.datastore === "ioredis" || this.connection != null) {
                 storeInstanceOptions = parser$5.load(options, this.redisStoreDefaults, {});
                 return new RedisDatastore$1(this, storeOptions, storeInstanceOptions);
@@ -959,7 +1054,7 @@ var require_light = __commonJS({
               } else {
                 throw new Bottleneck3.prototype.BottleneckError(`Invalid datastore type: ${this.datastore}`);
               }
-            }.call(this);
+            }).call(this);
             this._queues.on("leftzero", () => {
               var ref;
               return (ref = this._store.heartbeat) != null ? typeof ref.ref === "function" ? ref.ref() : void 0 : void 0;
@@ -1341,24 +1436,24 @@ var require_light = __commonJS({
           dropErrorMessage: "This limiter has been stopped."
         };
         return Bottleneck3;
-      }.call(commonjsGlobal);
+      }).call(commonjsGlobal);
       var Bottleneck_1 = Bottleneck2;
       var lib = Bottleneck_1;
       return lib;
-    });
+    }));
   }
 });
 
 // index.ts
-var octokit_cjs_exports = {};
-__export(octokit_cjs_exports, {
+var index_exports = {};
+__export(index_exports, {
   App: () => App2,
   OAuthApp: () => OAuthApp2,
   Octokit: () => Octokit2,
   RequestError: () => RequestError,
   createNodeMiddleware: () => createNodeMiddleware3
 });
-module.exports = __toCommonJS(octokit_cjs_exports);
+module.exports = __toCommonJS(index_exports);
 
 // node_modules/universal-user-agent/index.js
 function getUserAgent() {
@@ -1501,13 +1596,10 @@ function lowercaseKeys(object) {
   }, {});
 }
 function isPlainObject(value) {
-  if (typeof value !== "object" || value === null)
-    return false;
-  if (Object.prototype.toString.call(value) !== "[object Object]")
-    return false;
+  if (typeof value !== "object" || value === null) return false;
+  if (Object.prototype.toString.call(value) !== "[object Object]") return false;
   const proto = Object.getPrototypeOf(value);
-  if (proto === null)
-    return true;
+  if (proto === null) return true;
   const Ctor = Object.prototype.hasOwnProperty.call(proto, "constructor") && proto.constructor;
   return typeof Ctor === "function" && Ctor instanceof Ctor && Function.prototype.call(Ctor) === Function.prototype.call(value);
 }
@@ -1515,10 +1607,8 @@ function mergeDeep(defaults, options) {
   const result = Object.assign({}, defaults);
   Object.keys(options).forEach((key) => {
     if (isPlainObject(options[key])) {
-      if (!(key in defaults))
-        Object.assign(result, { [key]: options[key] });
-      else
-        result[key] = mergeDeep(defaults[key], options[key]);
+      if (!(key in defaults)) Object.assign(result, { [key]: options[key] });
+      else result[key] = mergeDeep(defaults[key], options[key]);
     } else {
       Object.assign(result, { [key]: options[key] });
     }
@@ -1567,9 +1657,9 @@ function addQueryParameters(url, parameters) {
     return `${name}=${encodeURIComponent(parameters[name])}`;
   }).join("&");
 }
-var urlVariableRegex = /\{[^}]+\}/g;
+var urlVariableRegex = /\{[^{}}]+\}/g;
 function removeNonChars(variableName) {
-  return variableName.replace(/^\W+|\W+$/g, "").split(/,/);
+  return variableName.replace(/(?:^\W+)|(?:(?<!\W)\W+$)/g, "").split(/,/);
 }
 function extractUrlVariableNames(url) {
   const matches = url.match(urlVariableRegex);
@@ -1749,7 +1839,7 @@ function parse(options) {
     }
     if (url.endsWith("/graphql")) {
       if (options.mediaType.previews?.length) {
-        const previewsFromAcceptHeader = headers.accept.match(/[\w-]+(?=-preview)/g) || [];
+        const previewsFromAcceptHeader = headers.accept.match(/(?<![\w-])[\w-]+(?=-preview)/g) || [];
         headers.accept = previewsFromAcceptHeader.concat(options.mediaType.previews).map((preview) => {
           const format = options.mediaType.format ? `.${options.mediaType.format}` : "+json";
           return `application/vnd.github.${preview}-preview${format}`;
@@ -1795,6 +1885,9 @@ function withDefaults(oldDefaults, newDefaults) {
 }
 var endpoint = withDefaults(null, DEFAULTS);
 
+// node_modules/@octokit/request/dist-bundle/index.js
+var import_fast_content_type_parse = __toESM(require_fast_content_type_parse(), 1);
+
 // node_modules/@octokit/request-error/dist-src/index.js
 var RequestError = class extends Error {
   name;
@@ -1824,7 +1917,7 @@ var RequestError = class extends Error {
     if (options.request.headers.authorization) {
       requestCopy.headers = Object.assign({}, options.request.headers, {
         authorization: options.request.headers.authorization.replace(
-          / .*$/,
+          /(?<! ) .*$/,
           " [REDACTED]"
         )
       });
@@ -1835,20 +1928,17 @@ var RequestError = class extends Error {
 };
 
 // node_modules/@octokit/request/dist-bundle/index.js
-var VERSION2 = "0.0.0-development";
+var VERSION2 = "10.0.3";
 var defaults_default = {
   headers: {
     "user-agent": `octokit-request.js/${VERSION2} ${getUserAgent()}`
   }
 };
 function isPlainObject2(value) {
-  if (typeof value !== "object" || value === null)
-    return false;
-  if (Object.prototype.toString.call(value) !== "[object Object]")
-    return false;
+  if (typeof value !== "object" || value === null) return false;
+  if (Object.prototype.toString.call(value) !== "[object Object]") return false;
   const proto = Object.getPrototypeOf(value);
-  if (proto === null)
-    return true;
+  if (proto === null) return true;
   const Ctor = Object.prototype.hasOwnProperty.call(proto, "constructor") && proto.constructor;
   return typeof Ctor === "function" && Ctor instanceof Ctor && Function.prototype.call(Ctor) === Function.prototype.call(value);
 }
@@ -1915,7 +2005,7 @@ async function fetchWrapper(requestOptions) {
     data: ""
   };
   if ("deprecation" in responseHeaders) {
-    const matches = responseHeaders.link && responseHeaders.link.match(/<([^>]+)>; rel="deprecation"/);
+    const matches = responseHeaders.link && responseHeaders.link.match(/<([^<>]+)>; rel="deprecation"/);
     const deprecationLink = matches && matches.pop();
     log.warn(
       `[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${responseHeaders.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`
@@ -1952,13 +2042,26 @@ async function fetchWrapper(requestOptions) {
 }
 async function getResponseData(response) {
   const contentType = response.headers.get("content-type");
-  if (/application\/json/.test(contentType)) {
-    return response.json().catch(() => response.text()).catch(() => "");
+  if (!contentType) {
+    return response.text().catch(() => "");
   }
-  if (!contentType || /^text\/|charset=utf-8$/.test(contentType)) {
-    return response.text();
+  const mimetype = (0, import_fast_content_type_parse.safeParse)(contentType);
+  if (isJSONResponse(mimetype)) {
+    let text = "";
+    try {
+      text = await response.text();
+      return JSON.parse(text);
+    } catch (err) {
+      return text;
+    }
+  } else if (mimetype.type.startsWith("text/") || mimetype.parameters.charset?.toLowerCase() === "utf-8") {
+    return response.text().catch(() => "");
+  } else {
+    return response.arrayBuffer().catch(() => new ArrayBuffer(0));
   }
-  return response.arrayBuffer();
+}
+function isJSONResponse(mimetype) {
+  return mimetype.type === "application/json" || mimetype.type === "application/scim+json";
 }
 function toErrorMessage(data) {
   if (typeof data === "string") {
@@ -2027,7 +2130,8 @@ var NON_VARIABLE_OPTIONS = [
   "headers",
   "request",
   "query",
-  "mediaType"
+  "mediaType",
+  "operationName"
 ];
 var FORBIDDEN_VARIABLE_OPTIONS = ["query", "method", "url"];
 var GHES_V3_SUFFIX_REGEX = /\/api\/v3\/?$/;
@@ -2039,8 +2143,7 @@ function graphql(request2, query, options) {
       );
     }
     for (const key in options) {
-      if (!FORBIDDEN_VARIABLE_OPTIONS.includes(key))
-        continue;
+      if (!FORBIDDEN_VARIABLE_OPTIONS.includes(key)) continue;
       return Promise.reject(
         new Error(
           `[@octokit/graphql] "${key}" cannot be used as variable name`
@@ -2106,13 +2209,14 @@ function withCustomRequest(customRequest) {
 }
 
 // node_modules/@octokit/auth-token/dist-bundle/index.js
-var REGEX_IS_INSTALLATION_LEGACY = /^v1\./;
-var REGEX_IS_INSTALLATION = /^ghs_/;
-var REGEX_IS_USER_TO_SERVER = /^ghu_/;
+var b64url = "(?:[a-zA-Z0-9_-]+)";
+var sep = "\\.";
+var jwtRE = new RegExp(`^${b64url}${sep}${b64url}${sep}${b64url}$`);
+var isJWT = jwtRE.test.bind(jwtRE);
 async function auth(token) {
-  const isApp = token.split(/\./).length === 3;
-  const isInstallation = REGEX_IS_INSTALLATION_LEGACY.test(token) || REGEX_IS_INSTALLATION.test(token);
-  const isUserToServer = REGEX_IS_USER_TO_SERVER.test(token);
+  const isApp = isJWT(token);
+  const isInstallation = token.startsWith("v1.") || token.startsWith("ghs_");
+  const isUserToServer = token.startsWith("ghu_");
   const tokenType = isApp ? "app" : isInstallation ? "installation" : isUserToServer ? "user-to-server" : "oauth";
   return {
     type: "token",
@@ -2150,13 +2254,28 @@ var createTokenAuth = function createTokenAuth2(token) {
 };
 
 // node_modules/@octokit/core/dist-src/version.js
-var VERSION4 = "6.1.2";
+var VERSION4 = "7.0.3";
 
 // node_modules/@octokit/core/dist-src/index.js
 var noop = () => {
 };
 var consoleWarn = console.warn.bind(console);
 var consoleError = console.error.bind(console);
+function createLogger(logger = {}) {
+  if (typeof logger.debug !== "function") {
+    logger.debug = noop;
+  }
+  if (typeof logger.info !== "function") {
+    logger.info = noop;
+  }
+  if (typeof logger.warn !== "function") {
+    logger.warn = consoleWarn;
+  }
+  if (typeof logger.error !== "function") {
+    logger.error = consoleError;
+  }
+  return logger;
+}
 var userAgentTrail = `octokit-core.js/${VERSION4} ${getUserAgent()}`;
 var Octokit = class {
   static VERSION = VERSION4;
@@ -2224,15 +2343,7 @@ var Octokit = class {
     }
     this.request = request.defaults(requestDefaults);
     this.graphql = withCustomRequest(this.request).defaults(requestDefaults);
-    this.log = Object.assign(
-      {
-        debug: noop,
-        info: noop,
-        warn: consoleWarn,
-        error: consoleError
-      },
-      options.log
-    );
+    this.log = createLogger(options.log);
     this.hook = hook7;
     if (!options.authStrategy) {
       if (!options.auth) {
@@ -2288,15 +2399,16 @@ function normalizePaginatedListResponse(response) {
       data: []
     };
   }
-  const responseNeedsNormalization = "total_count" in response.data && !("url" in response.data);
-  if (!responseNeedsNormalization)
-    return response;
+  const responseNeedsNormalization = ("total_count" in response.data || "total_commits" in response.data) && !("url" in response.data);
+  if (!responseNeedsNormalization) return response;
   const incompleteResults = response.data.incomplete_results;
   const repositorySelection = response.data.repository_selection;
   const totalCount = response.data.total_count;
+  const totalCommits = response.data.total_commits;
   delete response.data.incomplete_results;
   delete response.data.repository_selection;
   delete response.data.total_count;
+  delete response.data.total_commits;
   const namespaceKey = Object.keys(response.data)[0];
   const data = response.data[namespaceKey];
   response.data = data;
@@ -2307,6 +2419,7 @@ function normalizePaginatedListResponse(response) {
     response.data.repository_selection = repositorySelection;
   }
   response.data.total_count = totalCount;
+  response.data.total_commits = totalCommits;
   return response;
 }
 function iterator(octokit, route, parameters) {
@@ -2318,18 +2431,26 @@ function iterator(octokit, route, parameters) {
   return {
     [Symbol.asyncIterator]: () => ({
       async next() {
-        if (!url)
-          return { done: true };
+        if (!url) return { done: true };
         try {
           const response = await requestMethod({ method, url, headers });
           const normalizedResponse = normalizePaginatedListResponse(response);
           url = ((normalizedResponse.headers.link || "").match(
-            /<([^>]+)>;\s*rel="next"/
+            /<([^<>]+)>;\s*rel="next"/
           ) || [])[1];
+          if (!url && "total_commits" in normalizedResponse.data) {
+            const parsedUrl = new URL(normalizedResponse.url);
+            const params = parsedUrl.searchParams;
+            const page = parseInt(params.get("page") || "1", 10);
+            const per_page = parseInt(params.get("per_page") || "250", 10);
+            if (page * per_page < normalizedResponse.data.total_commits) {
+              params.set("page", String(page + 1));
+              url = parsedUrl.toString();
+            }
+          }
           return { value: normalizedResponse };
         } catch (error) {
-          if (error.status !== 409)
-            throw error;
+          if (error.status !== 409) throw error;
           url = "";
           return {
             value: {
@@ -2431,10 +2552,10 @@ var deepFindPathToProperty = (object, searchProp, path = []) => {
   for (const key of Object.keys(object)) {
     const currentPath = [...path, key];
     const currentValue = object[key];
-    if (currentValue.hasOwnProperty(searchProp)) {
-      return currentPath;
-    }
     if (isObject(currentValue)) {
+      if (currentValue.hasOwnProperty(searchProp)) {
+        return currentPath;
+      }
       const result = deepFindPathToProperty(
         currentValue,
         searchProp,
@@ -2479,8 +2600,7 @@ var createIterator = (octokit) => {
     return {
       [Symbol.asyncIterator]: () => ({
         async next() {
-          if (!nextPageExists)
-            return { done: true, value: {} };
+          if (!nextPageExists) return { done: true, value: {} };
           const response = await octokit.graphql(
             query,
             parameters
@@ -2548,7 +2668,7 @@ function paginateGraphQL(octokit) {
 }
 
 // node_modules/@octokit/plugin-rest-endpoint-methods/dist-src/version.js
-var VERSION6 = "13.2.4";
+var VERSION6 = "16.0.0";
 
 // node_modules/@octokit/plugin-rest-endpoint-methods/dist-src/generated/endpoints.js
 var Endpoints = {
@@ -2558,6 +2678,9 @@ var Endpoints = {
     ],
     addCustomLabelsToSelfHostedRunnerForRepo: [
       "POST /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"
+    ],
+    addRepoAccessToSelfHostedRunnerGroupInOrg: [
+      "PUT /orgs/{org}/actions/runner-groups/{runner_group_id}/repositories/{repository_id}"
     ],
     addSelectedRepoToOrgSecret: [
       "PUT /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}"
@@ -2574,6 +2697,7 @@ var Endpoints = {
     createEnvironmentVariable: [
       "POST /repos/{owner}/{repo}/environments/{environment_name}/variables"
     ],
+    createHostedRunnerForOrg: ["POST /orgs/{org}/actions/hosted-runners"],
     createOrUpdateEnvironmentSecret: [
       "PUT /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name}"
     ],
@@ -2610,6 +2734,9 @@ var Endpoints = {
     ],
     deleteEnvironmentVariable: [
       "DELETE /repos/{owner}/{repo}/environments/{environment_name}/variables/{name}"
+    ],
+    deleteHostedRunnerForOrg: [
+      "DELETE /orgs/{org}/actions/hosted-runners/{hosted_runner_id}"
     ],
     deleteOrgSecret: ["DELETE /orgs/{org}/actions/secrets/{secret_name}"],
     deleteOrgVariable: ["DELETE /orgs/{org}/actions/variables/{name}"],
@@ -2699,6 +2826,24 @@ var Endpoints = {
     getGithubActionsPermissionsRepository: [
       "GET /repos/{owner}/{repo}/actions/permissions"
     ],
+    getHostedRunnerForOrg: [
+      "GET /orgs/{org}/actions/hosted-runners/{hosted_runner_id}"
+    ],
+    getHostedRunnersGithubOwnedImagesForOrg: [
+      "GET /orgs/{org}/actions/hosted-runners/images/github-owned"
+    ],
+    getHostedRunnersLimitsForOrg: [
+      "GET /orgs/{org}/actions/hosted-runners/limits"
+    ],
+    getHostedRunnersMachineSpecsForOrg: [
+      "GET /orgs/{org}/actions/hosted-runners/machine-sizes"
+    ],
+    getHostedRunnersPartnerImagesForOrg: [
+      "GET /orgs/{org}/actions/hosted-runners/images/partner"
+    ],
+    getHostedRunnersPlatformsForOrg: [
+      "GET /orgs/{org}/actions/hosted-runners/platforms"
+    ],
     getJobForWorkflowRun: ["GET /repos/{owner}/{repo}/actions/jobs/{job_id}"],
     getOrgPublicKey: ["GET /orgs/{org}/actions/secrets/public-key"],
     getOrgSecret: ["GET /orgs/{org}/actions/secrets/{secret_name}"],
@@ -2742,6 +2887,10 @@ var Endpoints = {
     listEnvironmentVariables: [
       "GET /repos/{owner}/{repo}/environments/{environment_name}/variables"
     ],
+    listGithubHostedRunnersInGroupForOrg: [
+      "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/hosted-runners"
+    ],
+    listHostedRunnersForOrg: ["GET /orgs/{org}/actions/hosted-runners"],
     listJobsForWorkflowRun: [
       "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs"
     ],
@@ -2859,6 +3008,9 @@ var Endpoints = {
     ],
     updateEnvironmentVariable: [
       "PATCH /repos/{owner}/{repo}/environments/{environment_name}/variables/{name}"
+    ],
+    updateHostedRunnerForOrg: [
+      "PATCH /orgs/{org}/actions/hosted-runners/{hosted_runner_id}"
     ],
     updateOrgVariable: ["PATCH /orgs/{org}/actions/variables/{name}"],
     updateRepoVariable: [
@@ -2987,6 +3139,12 @@ var Endpoints = {
     getGithubActionsBillingUser: [
       "GET /users/{username}/settings/billing/actions"
     ],
+    getGithubBillingUsageReportOrg: [
+      "GET /organizations/{org}/settings/billing/usage"
+    ],
+    getGithubBillingUsageReportUser: [
+      "GET /users/{username}/settings/billing/usage"
+    ],
     getGithubPackagesBillingOrg: ["GET /orgs/{org}/settings/billing/packages"],
     getGithubPackagesBillingUser: [
       "GET /users/{username}/settings/billing/packages"
@@ -2997,6 +3155,13 @@ var Endpoints = {
     getSharedStorageBillingUser: [
       "GET /users/{username}/settings/billing/shared-storage"
     ]
+  },
+  campaigns: {
+    createCampaign: ["POST /orgs/{org}/campaigns"],
+    deleteCampaign: ["DELETE /orgs/{org}/campaigns/{campaign_number}"],
+    getCampaignSummary: ["GET /orgs/{org}/campaigns/{campaign_number}"],
+    listOrgCampaigns: ["GET /orgs/{org}/campaigns"],
+    updateCampaign: ["PATCH /orgs/{org}/campaigns/{campaign_number}"]
   },
   checks: {
     create: ["POST /repos/{owner}/{repo}/check-runs"],
@@ -3023,8 +3188,20 @@ var Endpoints = {
     update: ["PATCH /repos/{owner}/{repo}/check-runs/{check_run_id}"]
   },
   codeScanning: {
+    commitAutofix: [
+      "POST /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/autofix/commits"
+    ],
+    createAutofix: [
+      "POST /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/autofix"
+    ],
+    createVariantAnalysis: [
+      "POST /repos/{owner}/{repo}/code-scanning/codeql/variant-analyses"
+    ],
     deleteAnalysis: [
       "DELETE /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}{?confirm_delete}"
+    ],
+    deleteCodeqlDatabase: [
+      "DELETE /repos/{owner}/{repo}/code-scanning/codeql/databases/{language}"
     ],
     getAlert: [
       "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}",
@@ -3034,11 +3211,20 @@ var Endpoints = {
     getAnalysis: [
       "GET /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}"
     ],
+    getAutofix: [
+      "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/autofix"
+    ],
     getCodeqlDatabase: [
       "GET /repos/{owner}/{repo}/code-scanning/codeql/databases/{language}"
     ],
     getDefaultSetup: ["GET /repos/{owner}/{repo}/code-scanning/default-setup"],
     getSarif: ["GET /repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}"],
+    getVariantAnalysis: [
+      "GET /repos/{owner}/{repo}/code-scanning/codeql/variant-analyses/{codeql_variant_analysis_id}"
+    ],
+    getVariantAnalysisRepoTask: [
+      "GET /repos/{owner}/{repo}/code-scanning/codeql/variant-analyses/{codeql_variant_analysis_id}/repos/{repo_owner}/{repo_name}"
+    ],
     listAlertInstances: [
       "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances"
     ],
@@ -3060,6 +3246,64 @@ var Endpoints = {
       "PATCH /repos/{owner}/{repo}/code-scanning/default-setup"
     ],
     uploadSarif: ["POST /repos/{owner}/{repo}/code-scanning/sarifs"]
+  },
+  codeSecurity: {
+    attachConfiguration: [
+      "POST /orgs/{org}/code-security/configurations/{configuration_id}/attach"
+    ],
+    attachEnterpriseConfiguration: [
+      "POST /enterprises/{enterprise}/code-security/configurations/{configuration_id}/attach"
+    ],
+    createConfiguration: ["POST /orgs/{org}/code-security/configurations"],
+    createConfigurationForEnterprise: [
+      "POST /enterprises/{enterprise}/code-security/configurations"
+    ],
+    deleteConfiguration: [
+      "DELETE /orgs/{org}/code-security/configurations/{configuration_id}"
+    ],
+    deleteConfigurationForEnterprise: [
+      "DELETE /enterprises/{enterprise}/code-security/configurations/{configuration_id}"
+    ],
+    detachConfiguration: [
+      "DELETE /orgs/{org}/code-security/configurations/detach"
+    ],
+    getConfiguration: [
+      "GET /orgs/{org}/code-security/configurations/{configuration_id}"
+    ],
+    getConfigurationForRepository: [
+      "GET /repos/{owner}/{repo}/code-security-configuration"
+    ],
+    getConfigurationsForEnterprise: [
+      "GET /enterprises/{enterprise}/code-security/configurations"
+    ],
+    getConfigurationsForOrg: ["GET /orgs/{org}/code-security/configurations"],
+    getDefaultConfigurations: [
+      "GET /orgs/{org}/code-security/configurations/defaults"
+    ],
+    getDefaultConfigurationsForEnterprise: [
+      "GET /enterprises/{enterprise}/code-security/configurations/defaults"
+    ],
+    getRepositoriesForConfiguration: [
+      "GET /orgs/{org}/code-security/configurations/{configuration_id}/repositories"
+    ],
+    getRepositoriesForEnterpriseConfiguration: [
+      "GET /enterprises/{enterprise}/code-security/configurations/{configuration_id}/repositories"
+    ],
+    getSingleConfigurationForEnterprise: [
+      "GET /enterprises/{enterprise}/code-security/configurations/{configuration_id}"
+    ],
+    setConfigurationAsDefault: [
+      "PUT /orgs/{org}/code-security/configurations/{configuration_id}/defaults"
+    ],
+    setConfigurationAsDefaultForEnterprise: [
+      "PUT /enterprises/{enterprise}/code-security/configurations/{configuration_id}/defaults"
+    ],
+    updateConfiguration: [
+      "PATCH /orgs/{org}/code-security/configurations/{configuration_id}"
+    ],
+    updateEnterpriseConfiguration: [
+      "PATCH /enterprises/{enterprise}/code-security/configurations/{configuration_id}"
+    ]
   },
   codesOfConduct: {
     getAllCodesOfConduct: ["GET /codes_of_conduct"],
@@ -3191,15 +3435,15 @@ var Endpoints = {
     cancelCopilotSeatAssignmentForUsers: [
       "DELETE /orgs/{org}/copilot/billing/selected_users"
     ],
+    copilotMetricsForOrganization: ["GET /orgs/{org}/copilot/metrics"],
+    copilotMetricsForTeam: ["GET /orgs/{org}/team/{team_slug}/copilot/metrics"],
     getCopilotOrganizationDetails: ["GET /orgs/{org}/copilot/billing"],
     getCopilotSeatDetailsForUser: [
       "GET /orgs/{org}/members/{username}/copilot"
     ],
-    listCopilotSeats: ["GET /orgs/{org}/copilot/billing/seats"],
-    usageMetricsForEnterprise: ["GET /enterprises/{enterprise}/copilot/usage"],
-    usageMetricsForOrg: ["GET /orgs/{org}/copilot/usage"],
-    usageMetricsForTeam: ["GET /orgs/{org}/team/{team_slug}/copilot/usage"]
+    listCopilotSeats: ["GET /orgs/{org}/copilot/billing/seats"]
   },
+  credentials: { revoke: ["POST /credentials/revoke"] },
   dependabot: {
     addSelectedRepoToOrgSecret: [
       "PUT /orgs/{org}/dependabot/secrets/{secret_name}/repositories/{repository_id}"
@@ -3294,6 +3538,26 @@ var Endpoints = {
     getAllTemplates: ["GET /gitignore/templates"],
     getTemplate: ["GET /gitignore/templates/{name}"]
   },
+  hostedCompute: {
+    createNetworkConfigurationForOrg: [
+      "POST /orgs/{org}/settings/network-configurations"
+    ],
+    deleteNetworkConfigurationFromOrg: [
+      "DELETE /orgs/{org}/settings/network-configurations/{network_configuration_id}"
+    ],
+    getNetworkConfigurationForOrg: [
+      "GET /orgs/{org}/settings/network-configurations/{network_configuration_id}"
+    ],
+    getNetworkSettingsForOrg: [
+      "GET /orgs/{org}/settings/network-settings/{network_settings_id}"
+    ],
+    listNetworkConfigurationsForOrg: [
+      "GET /orgs/{org}/settings/network-configurations"
+    ],
+    updateNetworkConfigurationForOrg: [
+      "PATCH /orgs/{org}/settings/network-configurations/{network_configuration_id}"
+    ]
+  },
   interactions: {
     getRestrictionsForAuthenticatedUser: ["GET /user/interaction-limits"],
     getRestrictionsForOrg: ["GET /orgs/{org}/interaction-limits"],
@@ -3327,6 +3591,9 @@ var Endpoints = {
       "POST /repos/{owner}/{repo}/issues/{issue_number}/assignees"
     ],
     addLabels: ["POST /repos/{owner}/{repo}/issues/{issue_number}/labels"],
+    addSubIssue: [
+      "POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues"
+    ],
     checkUserCanBeAssigned: ["GET /repos/{owner}/{repo}/assignees/{assignee}"],
     checkUserCanBeAssignedToIssue: [
       "GET /repos/{owner}/{repo}/issues/{issue_number}/assignees/{assignee}"
@@ -3369,6 +3636,9 @@ var Endpoints = {
       "GET /repos/{owner}/{repo}/issues/{issue_number}/labels"
     ],
     listMilestones: ["GET /repos/{owner}/{repo}/milestones"],
+    listSubIssues: [
+      "GET /repos/{owner}/{repo}/issues/{issue_number}/sub_issues"
+    ],
     lock: ["PUT /repos/{owner}/{repo}/issues/{issue_number}/lock"],
     removeAllLabels: [
       "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels"
@@ -3378,6 +3648,12 @@ var Endpoints = {
     ],
     removeLabel: [
       "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}"
+    ],
+    removeSubIssue: [
+      "DELETE /repos/{owner}/{repo}/issues/{issue_number}/sub_issue"
+    ],
+    reprioritizeSubIssue: [
+      "PATCH /repos/{owner}/{repo}/issues/{issue_number}/sub_issues/priority"
     ],
     setLabels: ["PUT /repos/{owner}/{repo}/issues/{issue_number}/labels"],
     unlock: ["DELETE /repos/{owner}/{repo}/issues/{issue_number}/lock"],
@@ -3452,7 +3728,11 @@ var Endpoints = {
   },
   orgs: {
     addSecurityManagerTeam: [
-      "PUT /orgs/{org}/security-managers/teams/{team_slug}"
+      "PUT /orgs/{org}/security-managers/teams/{team_slug}",
+      {},
+      {
+        deprecated: "octokit.rest.orgs.addSecurityManagerTeam() is deprecated, see https://docs.github.com/rest/orgs/security-managers#add-a-security-manager-team"
+      }
     ],
     assignTeamToOrgRole: [
       "PUT /orgs/{org}/organization-roles/teams/{team_slug}/{role_id}"
@@ -3468,8 +3748,8 @@ var Endpoints = {
     convertMemberToOutsideCollaborator: [
       "PUT /orgs/{org}/outside_collaborators/{username}"
     ],
-    createCustomOrganizationRole: ["POST /orgs/{org}/organization-roles"],
     createInvitation: ["POST /orgs/{org}/invitations"],
+    createIssueType: ["POST /orgs/{org}/issue-types"],
     createOrUpdateCustomProperties: ["PATCH /orgs/{org}/properties/schema"],
     createOrUpdateCustomPropertiesValuesForRepos: [
       "PATCH /orgs/{org}/properties/values"
@@ -3479,12 +3759,14 @@ var Endpoints = {
     ],
     createWebhook: ["POST /orgs/{org}/hooks"],
     delete: ["DELETE /orgs/{org}"],
-    deleteCustomOrganizationRole: [
-      "DELETE /orgs/{org}/organization-roles/{role_id}"
-    ],
+    deleteIssueType: ["DELETE /orgs/{org}/issue-types/{issue_type_id}"],
     deleteWebhook: ["DELETE /orgs/{org}/hooks/{hook_id}"],
     enableOrDisableSecurityProductOnAllOrgRepos: [
-      "POST /orgs/{org}/{security_product}/{enablement}"
+      "POST /orgs/{org}/{security_product}/{enablement}",
+      {},
+      {
+        deprecated: "octokit.rest.orgs.enableOrDisableSecurityProductOnAllOrgRepos() is deprecated, see https://docs.github.com/rest/orgs/orgs#enable-or-disable-a-security-feature-for-an-organization"
+      }
     ],
     get: ["GET /orgs/{org}"],
     getAllCustomProperties: ["GET /orgs/{org}/properties/schema"],
@@ -3494,6 +3776,10 @@ var Endpoints = {
     getMembershipForAuthenticatedUser: ["GET /user/memberships/orgs/{org}"],
     getMembershipForUser: ["GET /orgs/{org}/memberships/{username}"],
     getOrgRole: ["GET /orgs/{org}/organization-roles/{role_id}"],
+    getOrgRulesetHistory: ["GET /orgs/{org}/rulesets/{ruleset_id}/history"],
+    getOrgRulesetVersion: [
+      "GET /orgs/{org}/rulesets/{ruleset_id}/history/{version_id}"
+    ],
     getWebhook: ["GET /orgs/{org}/hooks/{hook_id}"],
     getWebhookConfigForOrg: ["GET /orgs/{org}/hooks/{hook_id}/config"],
     getWebhookDelivery: [
@@ -3501,12 +3787,14 @@ var Endpoints = {
     ],
     list: ["GET /organizations"],
     listAppInstallations: ["GET /orgs/{org}/installations"],
+    listAttestations: ["GET /orgs/{org}/attestations/{subject_digest}"],
     listBlockedUsers: ["GET /orgs/{org}/blocks"],
     listCustomPropertiesValuesForRepos: ["GET /orgs/{org}/properties/values"],
     listFailedInvitations: ["GET /orgs/{org}/failed_invitations"],
     listForAuthenticatedUser: ["GET /user/orgs"],
     listForUser: ["GET /users/{username}/orgs"],
     listInvitationTeams: ["GET /orgs/{org}/invitations/{invitation_id}/teams"],
+    listIssueTypes: ["GET /orgs/{org}/issue-types"],
     listMembers: ["GET /orgs/{org}/members"],
     listMembershipsForAuthenticatedUser: ["GET /user/memberships/orgs"],
     listOrgRoleTeams: ["GET /orgs/{org}/organization-roles/{role_id}/teams"],
@@ -3526,12 +3814,15 @@ var Endpoints = {
     listPatGrants: ["GET /orgs/{org}/personal-access-tokens"],
     listPendingInvitations: ["GET /orgs/{org}/invitations"],
     listPublicMembers: ["GET /orgs/{org}/public_members"],
-    listSecurityManagerTeams: ["GET /orgs/{org}/security-managers"],
+    listSecurityManagerTeams: [
+      "GET /orgs/{org}/security-managers",
+      {},
+      {
+        deprecated: "octokit.rest.orgs.listSecurityManagerTeams() is deprecated, see https://docs.github.com/rest/orgs/security-managers#list-security-manager-teams"
+      }
+    ],
     listWebhookDeliveries: ["GET /orgs/{org}/hooks/{hook_id}/deliveries"],
     listWebhooks: ["GET /orgs/{org}/hooks"],
-    patchCustomOrganizationRole: [
-      "PATCH /orgs/{org}/organization-roles/{role_id}"
-    ],
     pingWebhook: ["POST /orgs/{org}/hooks/{hook_id}/pings"],
     redeliverWebhookDelivery: [
       "POST /orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}/attempts"
@@ -3548,7 +3839,11 @@ var Endpoints = {
       "DELETE /orgs/{org}/public_members/{username}"
     ],
     removeSecurityManagerTeam: [
-      "DELETE /orgs/{org}/security-managers/teams/{team_slug}"
+      "DELETE /orgs/{org}/security-managers/teams/{team_slug}",
+      {},
+      {
+        deprecated: "octokit.rest.orgs.removeSecurityManagerTeam() is deprecated, see https://docs.github.com/rest/orgs/security-managers#remove-a-security-manager-team"
+      }
     ],
     reviewPatGrantRequest: [
       "POST /orgs/{org}/personal-access-token-requests/{pat_request_id}"
@@ -3574,6 +3869,7 @@ var Endpoints = {
     ],
     unblockUser: ["DELETE /orgs/{org}/blocks/{username}"],
     update: ["PATCH /orgs/{org}"],
+    updateIssueType: ["PUT /orgs/{org}/issue-types/{issue_type_id}"],
     updateMembershipForAuthenticatedUser: [
       "PATCH /user/memberships/orgs/{org}"
     ],
@@ -3674,36 +3970,17 @@ var Endpoints = {
       "POST /users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}/restore"
     ]
   },
-  projects: {
-    addCollaborator: ["PUT /projects/{project_id}/collaborators/{username}"],
-    createCard: ["POST /projects/columns/{column_id}/cards"],
-    createColumn: ["POST /projects/{project_id}/columns"],
-    createForAuthenticatedUser: ["POST /user/projects"],
-    createForOrg: ["POST /orgs/{org}/projects"],
-    createForRepo: ["POST /repos/{owner}/{repo}/projects"],
-    delete: ["DELETE /projects/{project_id}"],
-    deleteCard: ["DELETE /projects/columns/cards/{card_id}"],
-    deleteColumn: ["DELETE /projects/columns/{column_id}"],
-    get: ["GET /projects/{project_id}"],
-    getCard: ["GET /projects/columns/cards/{card_id}"],
-    getColumn: ["GET /projects/columns/{column_id}"],
-    getPermissionForUser: [
-      "GET /projects/{project_id}/collaborators/{username}/permission"
+  privateRegistries: {
+    createOrgPrivateRegistry: ["POST /orgs/{org}/private-registries"],
+    deleteOrgPrivateRegistry: [
+      "DELETE /orgs/{org}/private-registries/{secret_name}"
     ],
-    listCards: ["GET /projects/columns/{column_id}/cards"],
-    listCollaborators: ["GET /projects/{project_id}/collaborators"],
-    listColumns: ["GET /projects/{project_id}/columns"],
-    listForOrg: ["GET /orgs/{org}/projects"],
-    listForRepo: ["GET /repos/{owner}/{repo}/projects"],
-    listForUser: ["GET /users/{username}/projects"],
-    moveCard: ["POST /projects/columns/cards/{card_id}/moves"],
-    moveColumn: ["POST /projects/columns/{column_id}/moves"],
-    removeCollaborator: [
-      "DELETE /projects/{project_id}/collaborators/{username}"
-    ],
-    update: ["PATCH /projects/{project_id}"],
-    updateCard: ["PATCH /projects/columns/cards/{card_id}"],
-    updateColumn: ["PATCH /projects/columns/{column_id}"]
+    getOrgPrivateRegistry: ["GET /orgs/{org}/private-registries/{secret_name}"],
+    getOrgPublicKey: ["GET /orgs/{org}/private-registries/public-key"],
+    listOrgPrivateRegistries: ["GET /orgs/{org}/private-registries"],
+    updateOrgPrivateRegistry: [
+      "PATCH /orgs/{org}/private-registries/{secret_name}"
+    ]
   },
   pulls: {
     checkIfMerged: ["GET /repos/{owner}/{repo}/pulls/{pull_number}/merge"],
@@ -3876,6 +4153,7 @@ var Endpoints = {
     compareCommitsWithBasehead: [
       "GET /repos/{owner}/{repo}/compare/{basehead}"
     ],
+    createAttestation: ["POST /repos/{owner}/{repo}/attestations"],
     createAutolink: ["POST /repos/{owner}/{repo}/autolinks"],
     createCommitComment: [
       "POST /repos/{owner}/{repo}/commits/{commit_sha}/comments"
@@ -3911,7 +4189,6 @@ var Endpoints = {
     createPagesSite: ["POST /repos/{owner}/{repo}/pages"],
     createRelease: ["POST /repos/{owner}/{repo}/releases"],
     createRepoRuleset: ["POST /repos/{owner}/{repo}/rulesets"],
-    createTagProtection: ["POST /repos/{owner}/{repo}/tags/protection"],
     createUsingTemplate: [
       "POST /repos/{template_owner}/{template_repo}/generate"
     ],
@@ -3963,9 +4240,6 @@ var Endpoints = {
       "DELETE /repos/{owner}/{repo}/releases/assets/{asset_id}"
     ],
     deleteRepoRuleset: ["DELETE /repos/{owner}/{repo}/rulesets/{ruleset_id}"],
-    deleteTagProtection: [
-      "DELETE /repos/{owner}/{repo}/tags/protection/{tag_protection_id}"
-    ],
     deleteWebhook: ["DELETE /repos/{owner}/{repo}/hooks/{hook_id}"],
     disableAutomatedSecurityFixes: [
       "DELETE /repos/{owner}/{repo}/automated-security-fixes"
@@ -4079,6 +4353,12 @@ var Endpoints = {
     ],
     getRepoRuleSuites: ["GET /repos/{owner}/{repo}/rulesets/rule-suites"],
     getRepoRuleset: ["GET /repos/{owner}/{repo}/rulesets/{ruleset_id}"],
+    getRepoRulesetHistory: [
+      "GET /repos/{owner}/{repo}/rulesets/{ruleset_id}/history"
+    ],
+    getRepoRulesetVersion: [
+      "GET /repos/{owner}/{repo}/rulesets/{ruleset_id}/history/{version_id}"
+    ],
     getRepoRulesets: ["GET /repos/{owner}/{repo}/rulesets"],
     getStatusChecksProtection: [
       "GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks"
@@ -4100,6 +4380,9 @@ var Endpoints = {
       "GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id}"
     ],
     listActivities: ["GET /repos/{owner}/{repo}/activity"],
+    listAttestations: [
+      "GET /repos/{owner}/{repo}/attestations/{subject_digest}"
+    ],
     listAutolinks: ["GET /repos/{owner}/{repo}/autolinks"],
     listBranches: ["GET /repos/{owner}/{repo}/branches"],
     listBranchesForHeadCommit: [
@@ -4142,7 +4425,6 @@ var Endpoints = {
       "GET /repos/{owner}/{repo}/releases/{release_id}/assets"
     ],
     listReleases: ["GET /repos/{owner}/{repo}/releases"],
-    listTagProtection: ["GET /repos/{owner}/{repo}/tags/protection"],
     listTags: ["GET /repos/{owner}/{repo}/tags"],
     listTeams: ["GET /repos/{owner}/{repo}/teams"],
     listWebhookDeliveries: [
@@ -4250,16 +4532,26 @@ var Endpoints = {
   search: {
     code: ["GET /search/code"],
     commits: ["GET /search/commits"],
-    issuesAndPullRequests: ["GET /search/issues"],
+    issuesAndPullRequests: [
+      "GET /search/issues",
+      {},
+      {
+        deprecated: "octokit.rest.search.issuesAndPullRequests() is deprecated, see https://docs.github.com/rest/search/search#search-issues-and-pull-requests"
+      }
+    ],
     labels: ["GET /search/labels"],
     repos: ["GET /search/repositories"],
     topics: ["GET /search/topics"],
     users: ["GET /search/users"]
   },
   secretScanning: {
+    createPushProtectionBypass: [
+      "POST /repos/{owner}/{repo}/secret-scanning/push-protection-bypasses"
+    ],
     getAlert: [
       "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}"
     ],
+    getScanHistory: ["GET /repos/{owner}/{repo}/secret-scanning/scan-history"],
     listAlertsForEnterprise: [
       "GET /enterprises/{enterprise}/secret-scanning/alerts"
     ],
@@ -4300,14 +4592,8 @@ var Endpoints = {
     addOrUpdateMembershipForUserInOrg: [
       "PUT /orgs/{org}/teams/{team_slug}/memberships/{username}"
     ],
-    addOrUpdateProjectPermissionsInOrg: [
-      "PUT /orgs/{org}/teams/{team_slug}/projects/{project_id}"
-    ],
     addOrUpdateRepoPermissionsInOrg: [
       "PUT /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}"
-    ],
-    checkPermissionsForProjectInOrg: [
-      "GET /orgs/{org}/teams/{team_slug}/projects/{project_id}"
     ],
     checkPermissionsForRepoInOrg: [
       "GET /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}"
@@ -4345,13 +4631,9 @@ var Endpoints = {
     listPendingInvitationsInOrg: [
       "GET /orgs/{org}/teams/{team_slug}/invitations"
     ],
-    listProjectsInOrg: ["GET /orgs/{org}/teams/{team_slug}/projects"],
     listReposInOrg: ["GET /orgs/{org}/teams/{team_slug}/repos"],
     removeMembershipForUserInOrg: [
       "DELETE /orgs/{org}/teams/{team_slug}/memberships/{username}"
-    ],
-    removeProjectInOrg: [
-      "DELETE /orgs/{org}/teams/{team_slug}/projects/{project_id}"
     ],
     removeRepoInOrg: [
       "DELETE /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}"
@@ -4413,6 +4695,7 @@ var Endpoints = {
     ],
     follow: ["PUT /user/following/{username}"],
     getAuthenticated: ["GET /user"],
+    getById: ["GET /user/{account_id}"],
     getByUsername: ["GET /users/{username}"],
     getContextForUser: ["GET /users/{username}/hovercard"],
     getGpgKeyForAuthenticated: [
@@ -4431,6 +4714,7 @@ var Endpoints = {
       "GET /user/ssh_signing_keys/{ssh_signing_key_id}"
     ],
     list: ["GET /users"],
+    listAttestations: ["GET /users/{username}/attestations/{subject_digest}"],
     listBlockedByAuthenticated: [
       "GET /user/blocks",
       {},
@@ -4633,6 +4917,7 @@ legacyRestEndpointMethods.VERSION = VERSION6;
 
 // node_modules/@octokit/plugin-retry/dist-bundle/index.js
 var import_light = __toESM(require_light(), 1);
+var VERSION7 = "0.0.0-development";
 async function errorRequest(state, octokit, error, options) {
   if (!error.request || !error.request.request) {
     throw error;
@@ -4661,7 +4946,7 @@ async function wrapRequest(state, octokit, request2, options) {
 }
 async function requestWithGraphqlErrorHandling(state, octokit, request2, options) {
   const response = await request2(request2, options);
-  if (response.data && response.data.errors && /Something went wrong while executing your query/.test(
+  if (response.data && response.data.errors && response.data.errors.length > 0 && /Something went wrong while executing your query/.test(
     response.data.errors[0].message
   )) {
     const error = new RequestError(response.data.errors[0].message, 500, {
@@ -4672,13 +4957,12 @@ async function requestWithGraphqlErrorHandling(state, octokit, request2, options
   }
   return response;
 }
-var VERSION7 = "0.0.0-development";
 function retry(octokit, octokitOptions) {
   const state = Object.assign(
     {
       enabled: true,
       retryAfterBaseValue: 1e3,
-      doNotRetry: [400, 401, 403, 404, 422, 451],
+      doNotRetry: [400, 401, 403, 404, 410, 422, 451],
       retries: 3
     },
     octokitOptions.retry
@@ -4709,8 +4993,9 @@ function wrapRequest2(state, request2, options) {
   return state.retryLimiter.schedule(doRequest, state, request2, options);
 }
 async function doRequest(state, request2, options) {
-  const isWrite = options.method !== "GET" && options.method !== "HEAD";
   const { pathname } = new URL(options.url, "http://github.test");
+  const isAuth = isAuthRequest(options.method, pathname);
+  const isWrite = !isAuth && options.method !== "GET" && options.method !== "HEAD";
   const isSearch = options.method === "GET" && pathname.startsWith("/search/");
   const isGraphQL = pathname.startsWith("/graphql");
   const retryCount = ~~request2.retryCount;
@@ -4727,7 +5012,7 @@ async function doRequest(state, request2, options) {
   if (isSearch) {
     await state.search.key(state.id).schedule(jobOptions, noop2);
   }
-  const req = state.global.key(state.id).schedule(jobOptions, request2, options);
+  const req = (isAuth ? state.auth : state.global).key(state.id).schedule(jobOptions, request2, options);
   if (isGraphQL) {
     const res = await req;
     if (res.data.errors != null && res.data.errors.some((error) => error.type === "RATE_LIMITED")) {
@@ -4740,6 +5025,13 @@ async function doRequest(state, request2, options) {
   }
   return req;
 }
+function isAuthRequest(method, pathname) {
+  return method === "PATCH" && // https://docs.github.com/en/rest/apps/apps?apiVersion=2022-11-28#create-a-scoped-access-token
+  /^\/applications\/[^/]+\/token\/scoped$/.test(pathname) || method === "POST" && // https://docs.github.com/en/rest/apps/oauth-applications?apiVersion=2022-11-28#reset-a-token
+  (/^\/applications\/[^/]+\/token$/.test(pathname) || // https://docs.github.com/en/rest/apps/apps?apiVersion=2022-11-28#create-an-installation-access-token-for-an-app
+  /^\/app\/installations\/[^/]+\/access_tokens$/.test(pathname) || // https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
+  pathname === "/login/oauth/access_token");
+}
 var triggers_notification_paths_default = [
   "/orgs/{org}/invitations",
   "/orgs/{org}/invitations/{invitation_id}",
@@ -4749,6 +5041,8 @@ var triggers_notification_paths_default = [
   "/repos/{owner}/{repo}/commits/{commit_sha}/comments",
   "/repos/{owner}/{repo}/issues",
   "/repos/{owner}/{repo}/issues/{issue_number}/comments",
+  "/repos/{owner}/{repo}/issues/{issue_number}/sub_issue",
+  "/repos/{owner}/{repo}/issues/{issue_number}/sub_issues/priority",
   "/repos/{owner}/{repo}/pulls",
   "/repos/{owner}/{repo}/pulls/{pull_number}/comments",
   "/repos/{owner}/{repo}/pulls/{pull_number}/comments/{comment_id}/replies",
@@ -4773,6 +5067,11 @@ var createGroups = function(Bottleneck2, common) {
   groups.global = new Bottleneck2.Group({
     id: "octokit-global",
     maxConcurrent: 10,
+    ...common
+  });
+  groups.auth = new Bottleneck2.Group({
+    id: "octokit-auth",
+    maxConcurrent: 1,
     ...common
   });
   groups.search = new Bottleneck2.Group({
@@ -4806,7 +5105,10 @@ function throttling(octokit, octokitOptions) {
   if (!enabled) {
     return {};
   }
-  const common = { connection, timeout };
+  const common = { timeout };
+  if (typeof connection !== "undefined") {
+    common.connection = connection;
+  }
   if (groups.global == null) {
     createGroups(Bottleneck2, common);
   }
@@ -4847,13 +5149,13 @@ function throttling(octokit, octokitOptions) {
     const [state2, request2, options] = info.args;
     const { pathname } = new URL(options.url, "http://github.test");
     const shouldRetryGraphQL = pathname.startsWith("/graphql") && error.status !== 401;
-    if (!(shouldRetryGraphQL || error.status === 403)) {
+    if (!(shouldRetryGraphQL || error.status === 403 || error.status === 429)) {
       return;
     }
     const retryCount = ~~request2.retryCount;
     request2.retryCount = retryCount;
     options.request.retryCount = retryCount;
-    const { wantRetry, retryAfter = 0 } = await async function() {
+    const { wantRetry, retryAfter = 0 } = await (async function() {
       if (/\bsecondary rate\b/i.test(error.message)) {
         const retryAfter2 = Number(error.response.headers["retry-after"]) || state2.fallbackSecondaryRateRetryAfter;
         const wantRetry2 = await emitter.trigger(
@@ -4887,7 +5189,7 @@ function throttling(octokit, octokitOptions) {
         return { wantRetry: wantRetry2, retryAfter: retryAfter2 };
       }
       return {};
-    }();
+    })();
     if (wantRetry) {
       request2.retryCount++;
       return retryAfter * state2.retryAfterBaseValue;
@@ -4930,10 +5232,8 @@ function urlBuilderAuthorize(base, options) {
   };
   let url = base;
   Object.keys(map).filter((k) => options[k] !== null).filter((k) => {
-    if (k !== "scopes")
-      return true;
-    if (options.clientType === "github-app")
-      return false;
+    if (k !== "scopes") return true;
+    if (options.clientType === "github-app") return false;
     return !Array.isArray(options[k]) || options[k].length > 0;
   }).map((key) => [map[key], `${options[key]}`]).forEach(([key, value], index) => {
     url += index === 0 ? `?` : "&";
@@ -4983,8 +5283,7 @@ function getWebFlowAuthorizationUrl({
   });
 }
 async function exchangeWebFlowCode(options) {
-  const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const response = await oauthRequest(
     request2,
     "POST /login/oauth/access_token",
@@ -5021,8 +5320,7 @@ function toTimestamp(apiTimeInMs, expirationInSeconds) {
   return new Date(apiTimeInMs + expirationInSeconds * 1e3).toISOString();
 }
 async function createDeviceCode(options) {
-  const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const parameters = {
     client_id: options.clientId
   };
@@ -5032,8 +5330,7 @@ async function createDeviceCode(options) {
   return oauthRequest(request2, "POST /login/device/code", parameters);
 }
 async function exchangeDeviceCode(options) {
-  const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const response = await oauthRequest(
     request2,
     "POST /login/oauth/access_token",
@@ -5071,8 +5368,7 @@ function toTimestamp2(apiTimeInMs, expirationInSeconds) {
   return new Date(apiTimeInMs + expirationInSeconds * 1e3).toISOString();
 }
 async function checkToken(options) {
-  const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const response = await request2("POST /applications/{client_id}/token", {
     headers: {
       authorization: `basic ${btoa(
@@ -5097,8 +5393,7 @@ async function checkToken(options) {
   return { ...response, authentication };
 }
 async function refreshToken(options) {
-  const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const response = await oauthRequest(
     request2,
     "POST /login/oauth/access_token",
@@ -5136,8 +5431,7 @@ async function scopeToken(options) {
     token,
     ...requestOptions
   } = options;
-  const request2 = optionsRequest || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const response = await request2(
     "POST /applications/{client_id}/token/scoped",
     {
@@ -5161,8 +5455,7 @@ async function scopeToken(options) {
   return { ...response, authentication };
 }
 async function resetToken(options) {
-  const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const auth7 = btoa(`${options.clientId}:${options.clientSecret}`);
   const response = await request2(
     "PATCH /applications/{client_id}/token",
@@ -5189,8 +5482,7 @@ async function resetToken(options) {
   return { ...response, authentication };
 }
 async function deleteToken(options) {
-  const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const auth7 = btoa(`${options.clientId}:${options.clientSecret}`);
   return request2(
     "DELETE /applications/{client_id}/token",
@@ -5204,8 +5496,7 @@ async function deleteToken(options) {
   );
 }
 async function deleteAuthorization(options) {
-  const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const auth7 = btoa(`${options.clientId}:${options.clientSecret}`);
   return request2(
     "DELETE /applications/{client_id}/grant",
@@ -5222,8 +5513,7 @@ async function deleteAuthorization(options) {
 // node_modules/@octokit/auth-oauth-device/dist-bundle/index.js
 async function getOAuthAccessToken(state, options) {
   const cachedAuthentication = getCachedAuthentication(state, options.auth);
-  if (cachedAuthentication)
-    return cachedAuthentication;
+  if (cachedAuthentication) return cachedAuthentication;
   const { data: verification } = await createDeviceCode({
     clientType: state.clientType,
     clientId: state.clientId,
@@ -5242,10 +5532,8 @@ async function getOAuthAccessToken(state, options) {
   return authentication;
 }
 function getCachedAuthentication(state, auth22) {
-  if (auth22.refresh === true)
-    return false;
-  if (!state.authentication)
-    return false;
+  if (auth22.refresh === true) return false;
+  if (!state.authentication) return false;
   if (state.clientType === "github-app") {
     return state.authentication;
   }
@@ -5279,15 +5567,14 @@ async function waitForAccessToken(request2, clientId, clientType, verification) 
       ...authentication
     };
   } catch (error) {
-    if (!error.response)
-      throw error;
+    if (!error.response) throw error;
     const errorType = error.response.data.error;
     if (errorType === "authorization_pending") {
       await wait(verification.interval);
       return waitForAccessToken(request2, clientId, clientType, verification);
     }
     if (errorType === "slow_down") {
-      await wait(verification.interval + 5);
+      await wait(verification.interval + 7);
       return waitForAccessToken(request2, clientId, clientType, verification);
     }
     throw error;
@@ -5473,8 +5760,7 @@ async function auth3(state, options = {}) {
         request: state.request
       });
     } catch (error) {
-      if (error.status !== 404)
-        throw error;
+      if (error.status !== 404) throw error;
     }
     state.authentication.invalid = true;
     return state.authentication;
@@ -5584,8 +5870,7 @@ async function hook4(state, request2, route, parameters) {
   try {
     return await request2(endpoint2);
   } catch (error) {
-    if (error.status !== 401)
-      throw error;
+    if (error.status !== 401) throw error;
     error.message = `[@octokit/auth-oauth-app] "${endpoint2.method} ${endpoint2.url}" does not support clientId/clientSecret basic authentication.`;
     throw error;
   }
@@ -5648,16 +5933,11 @@ function base64encodeJSON(obj) {
 }
 
 // node_modules/universal-github-app-jwt/lib/crypto-node.js
-var crypto_node_exports = {};
-__export(crypto_node_exports, {
-  convertPrivateKey: () => convertPrivateKey
-});
-__reExport(crypto_node_exports, require("node:crypto"));
 var import_node_crypto = require("node:crypto");
+var import_node_crypto2 = require("node:crypto");
 function convertPrivateKey(privateKey) {
-  if (!isPkcs1(privateKey))
-    return privateKey;
-  return (0, import_node_crypto.createPrivateKey)(privateKey).export({
+  if (!isPkcs1(privateKey)) return privateKey;
+  return (0, import_node_crypto2.createPrivateKey)(privateKey).export({
     type: "pkcs8",
     format: "pem"
   });
@@ -5682,7 +5962,7 @@ async function getToken({ privateKey, payload }) {
   };
   const header = { alg: "RS256", typ: "JWT" };
   const privateKeyDER = getDERfromPEM(convertedPrivateKey);
-  const importedKey = await crypto_node_exports.subtle.importKey(
+  const importedKey = await import_node_crypto.subtle.importKey(
     "pkcs8",
     privateKeyDER,
     algorithm,
@@ -5691,7 +5971,7 @@ async function getToken({ privateKey, payload }) {
   );
   const encodedMessage = getEncodedMessage(header, payload);
   const encodedMessageArrBuf = string2ArrayBuffer(encodedMessage);
-  const signatureArrBuf = await crypto_node_exports.subtle.sign(
+  const signatureArrBuf = await import_node_crypto.subtle.sign(
     algorithm.name,
     importedKey,
     encodedMessageArrBuf
@@ -5726,1372 +6006,139 @@ async function githubAppJwt({
   };
 }
 
-// node_modules/lru-cache/dist/esm/index.js
-var perf = typeof performance === "object" && performance && typeof performance.now === "function" ? performance : Date;
-var warned = /* @__PURE__ */ new Set();
-var PROCESS = typeof process === "object" && !!process ? process : {};
-var emitWarning = (msg, type, code, fn) => {
-  typeof PROCESS.emitWarning === "function" ? PROCESS.emitWarning(msg, type, code, fn) : console.error(`[${code}] ${type}: ${msg}`);
-};
-var AC = globalThis.AbortController;
-var AS = globalThis.AbortSignal;
-if (typeof AC === "undefined") {
-  AS = class AbortSignal {
-    onabort;
-    _onabort = [];
-    reason;
-    aborted = false;
-    addEventListener(_, fn) {
-      this._onabort.push(fn);
+// node_modules/toad-cache/dist/toad-cache.mjs
+var LruObject = class {
+  constructor(max = 1e3, ttlInMsecs = 0) {
+    if (isNaN(max) || max < 0) {
+      throw new Error("Invalid max value");
     }
-  };
-  AC = class AbortController {
-    constructor() {
-      warnACPolyfill();
+    if (isNaN(ttlInMsecs) || ttlInMsecs < 0) {
+      throw new Error("Invalid ttl value");
     }
-    signal = new AS();
-    abort(reason) {
-      if (this.signal.aborted)
-        return;
-      this.signal.reason = reason;
-      this.signal.aborted = true;
-      for (const fn of this.signal._onabort) {
-        fn(reason);
-      }
-      this.signal.onabort?.(reason);
-    }
-  };
-  let printACPolyfillWarning = PROCESS.env?.LRU_CACHE_IGNORE_AC_WARNING !== "1";
-  const warnACPolyfill = () => {
-    if (!printACPolyfillWarning)
-      return;
-    printACPolyfillWarning = false;
-    emitWarning("AbortController is not defined. If using lru-cache in node 14, load an AbortController polyfill from the `node-abort-controller` package. A minimal polyfill is provided for use by LRUCache.fetch(), but it should not be relied upon in other contexts (eg, passing it to other APIs that use AbortController/AbortSignal might have undesirable effects). You may disable this with LRU_CACHE_IGNORE_AC_WARNING=1 in the env.", "NO_ABORT_CONTROLLER", "ENOTSUP", warnACPolyfill);
-  };
-}
-var shouldWarn = (code) => !warned.has(code);
-var TYPE = Symbol("type");
-var isPosInt = (n) => n && n === Math.floor(n) && n > 0 && isFinite(n);
-var getUintArray = (max) => !isPosInt(max) ? null : max <= Math.pow(2, 8) ? Uint8Array : max <= Math.pow(2, 16) ? Uint16Array : max <= Math.pow(2, 32) ? Uint32Array : max <= Number.MAX_SAFE_INTEGER ? ZeroArray : null;
-var ZeroArray = class extends Array {
-  constructor(size) {
-    super(size);
-    this.fill(0);
+    this.first = null;
+    this.items = /* @__PURE__ */ Object.create(null);
+    this.last = null;
+    this.size = 0;
+    this.max = max;
+    this.ttl = ttlInMsecs;
   }
-};
-var Stack = class _Stack {
-  heap;
-  length;
-  // private constructor
-  static #constructing = false;
-  static create(max) {
-    const HeapCls = getUintArray(max);
-    if (!HeapCls)
-      return [];
-    _Stack.#constructing = true;
-    const s = new _Stack(max, HeapCls);
-    _Stack.#constructing = false;
-    return s;
-  }
-  constructor(max, HeapCls) {
-    if (!_Stack.#constructing) {
-      throw new TypeError("instantiate Stack using Stack.create(n)");
-    }
-    this.heap = new HeapCls(max);
-    this.length = 0;
-  }
-  push(n) {
-    this.heap[this.length++] = n;
-  }
-  pop() {
-    return this.heap[--this.length];
-  }
-};
-var LRUCache = class _LRUCache {
-  // options that cannot be changed without disaster
-  #max;
-  #maxSize;
-  #dispose;
-  #disposeAfter;
-  #fetchMethod;
-  #memoMethod;
-  /**
-   * {@link LRUCache.OptionsBase.ttl}
-   */
-  ttl;
-  /**
-   * {@link LRUCache.OptionsBase.ttlResolution}
-   */
-  ttlResolution;
-  /**
-   * {@link LRUCache.OptionsBase.ttlAutopurge}
-   */
-  ttlAutopurge;
-  /**
-   * {@link LRUCache.OptionsBase.updateAgeOnGet}
-   */
-  updateAgeOnGet;
-  /**
-   * {@link LRUCache.OptionsBase.updateAgeOnHas}
-   */
-  updateAgeOnHas;
-  /**
-   * {@link LRUCache.OptionsBase.allowStale}
-   */
-  allowStale;
-  /**
-   * {@link LRUCache.OptionsBase.noDisposeOnSet}
-   */
-  noDisposeOnSet;
-  /**
-   * {@link LRUCache.OptionsBase.noUpdateTTL}
-   */
-  noUpdateTTL;
-  /**
-   * {@link LRUCache.OptionsBase.maxEntrySize}
-   */
-  maxEntrySize;
-  /**
-   * {@link LRUCache.OptionsBase.sizeCalculation}
-   */
-  sizeCalculation;
-  /**
-   * {@link LRUCache.OptionsBase.noDeleteOnFetchRejection}
-   */
-  noDeleteOnFetchRejection;
-  /**
-   * {@link LRUCache.OptionsBase.noDeleteOnStaleGet}
-   */
-  noDeleteOnStaleGet;
-  /**
-   * {@link LRUCache.OptionsBase.allowStaleOnFetchAbort}
-   */
-  allowStaleOnFetchAbort;
-  /**
-   * {@link LRUCache.OptionsBase.allowStaleOnFetchRejection}
-   */
-  allowStaleOnFetchRejection;
-  /**
-   * {@link LRUCache.OptionsBase.ignoreFetchAbort}
-   */
-  ignoreFetchAbort;
-  // computed properties
-  #size;
-  #calculatedSize;
-  #keyMap;
-  #keyList;
-  #valList;
-  #next;
-  #prev;
-  #head;
-  #tail;
-  #free;
-  #disposed;
-  #sizes;
-  #starts;
-  #ttls;
-  #hasDispose;
-  #hasFetchMethod;
-  #hasDisposeAfter;
-  /**
-   * Do not call this method unless you need to inspect the
-   * inner workings of the cache.  If anything returned by this
-   * object is modified in any way, strange breakage may occur.
-   *
-   * These fields are private for a reason!
-   *
-   * @internal
-   */
-  static unsafeExposeInternals(c) {
-    return {
-      // properties
-      starts: c.#starts,
-      ttls: c.#ttls,
-      sizes: c.#sizes,
-      keyMap: c.#keyMap,
-      keyList: c.#keyList,
-      valList: c.#valList,
-      next: c.#next,
-      prev: c.#prev,
-      get head() {
-        return c.#head;
-      },
-      get tail() {
-        return c.#tail;
-      },
-      free: c.#free,
-      // methods
-      isBackgroundFetch: (p) => c.#isBackgroundFetch(p),
-      backgroundFetch: (k, index, options, context) => c.#backgroundFetch(k, index, options, context),
-      moveToTail: (index) => c.#moveToTail(index),
-      indexes: (options) => c.#indexes(options),
-      rindexes: (options) => c.#rindexes(options),
-      isStale: (index) => c.#isStale(index)
-    };
-  }
-  // Protected read-only members
-  /**
-   * {@link LRUCache.OptionsBase.max} (read-only)
-   */
-  get max() {
-    return this.#max;
-  }
-  /**
-   * {@link LRUCache.OptionsBase.maxSize} (read-only)
-   */
-  get maxSize() {
-    return this.#maxSize;
-  }
-  /**
-   * The total computed size of items in the cache (read-only)
-   */
-  get calculatedSize() {
-    return this.#calculatedSize;
-  }
-  /**
-   * The number of items stored in the cache (read-only)
-   */
-  get size() {
-    return this.#size;
-  }
-  /**
-   * {@link LRUCache.OptionsBase.fetchMethod} (read-only)
-   */
-  get fetchMethod() {
-    return this.#fetchMethod;
-  }
-  get memoMethod() {
-    return this.#memoMethod;
-  }
-  /**
-   * {@link LRUCache.OptionsBase.dispose} (read-only)
-   */
-  get dispose() {
-    return this.#dispose;
-  }
-  /**
-   * {@link LRUCache.OptionsBase.disposeAfter} (read-only)
-   */
-  get disposeAfter() {
-    return this.#disposeAfter;
-  }
-  constructor(options) {
-    const { max = 0, ttl, ttlResolution = 1, ttlAutopurge, updateAgeOnGet, updateAgeOnHas, allowStale, dispose, disposeAfter, noDisposeOnSet, noUpdateTTL, maxSize = 0, maxEntrySize = 0, sizeCalculation, fetchMethod, memoMethod, noDeleteOnFetchRejection, noDeleteOnStaleGet, allowStaleOnFetchRejection, allowStaleOnFetchAbort, ignoreFetchAbort } = options;
-    if (max !== 0 && !isPosInt(max)) {
-      throw new TypeError("max option must be a nonnegative integer");
-    }
-    const UintArray = max ? getUintArray(max) : Array;
-    if (!UintArray) {
-      throw new Error("invalid max value: " + max);
-    }
-    this.#max = max;
-    this.#maxSize = maxSize;
-    this.maxEntrySize = maxEntrySize || this.#maxSize;
-    this.sizeCalculation = sizeCalculation;
-    if (this.sizeCalculation) {
-      if (!this.#maxSize && !this.maxEntrySize) {
-        throw new TypeError("cannot set sizeCalculation without setting maxSize or maxEntrySize");
-      }
-      if (typeof this.sizeCalculation !== "function") {
-        throw new TypeError("sizeCalculation set to non-function");
-      }
-    }
-    if (memoMethod !== void 0 && typeof memoMethod !== "function") {
-      throw new TypeError("memoMethod must be a function if defined");
-    }
-    this.#memoMethod = memoMethod;
-    if (fetchMethod !== void 0 && typeof fetchMethod !== "function") {
-      throw new TypeError("fetchMethod must be a function if specified");
-    }
-    this.#fetchMethod = fetchMethod;
-    this.#hasFetchMethod = !!fetchMethod;
-    this.#keyMap = /* @__PURE__ */ new Map();
-    this.#keyList = new Array(max).fill(void 0);
-    this.#valList = new Array(max).fill(void 0);
-    this.#next = new UintArray(max);
-    this.#prev = new UintArray(max);
-    this.#head = 0;
-    this.#tail = 0;
-    this.#free = Stack.create(max);
-    this.#size = 0;
-    this.#calculatedSize = 0;
-    if (typeof dispose === "function") {
-      this.#dispose = dispose;
-    }
-    if (typeof disposeAfter === "function") {
-      this.#disposeAfter = disposeAfter;
-      this.#disposed = [];
-    } else {
-      this.#disposeAfter = void 0;
-      this.#disposed = void 0;
-    }
-    this.#hasDispose = !!this.#dispose;
-    this.#hasDisposeAfter = !!this.#disposeAfter;
-    this.noDisposeOnSet = !!noDisposeOnSet;
-    this.noUpdateTTL = !!noUpdateTTL;
-    this.noDeleteOnFetchRejection = !!noDeleteOnFetchRejection;
-    this.allowStaleOnFetchRejection = !!allowStaleOnFetchRejection;
-    this.allowStaleOnFetchAbort = !!allowStaleOnFetchAbort;
-    this.ignoreFetchAbort = !!ignoreFetchAbort;
-    if (this.maxEntrySize !== 0) {
-      if (this.#maxSize !== 0) {
-        if (!isPosInt(this.#maxSize)) {
-          throw new TypeError("maxSize must be a positive integer if specified");
-        }
-      }
-      if (!isPosInt(this.maxEntrySize)) {
-        throw new TypeError("maxEntrySize must be a positive integer if specified");
-      }
-      this.#initializeSizeTracking();
-    }
-    this.allowStale = !!allowStale;
-    this.noDeleteOnStaleGet = !!noDeleteOnStaleGet;
-    this.updateAgeOnGet = !!updateAgeOnGet;
-    this.updateAgeOnHas = !!updateAgeOnHas;
-    this.ttlResolution = isPosInt(ttlResolution) || ttlResolution === 0 ? ttlResolution : 1;
-    this.ttlAutopurge = !!ttlAutopurge;
-    this.ttl = ttl || 0;
-    if (this.ttl) {
-      if (!isPosInt(this.ttl)) {
-        throw new TypeError("ttl must be a positive integer if specified");
-      }
-      this.#initializeTTLTracking();
-    }
-    if (this.#max === 0 && this.ttl === 0 && this.#maxSize === 0) {
-      throw new TypeError("At least one of max, maxSize, or ttl is required");
-    }
-    if (!this.ttlAutopurge && !this.#max && !this.#maxSize) {
-      const code = "LRU_CACHE_UNBOUNDED";
-      if (shouldWarn(code)) {
-        warned.add(code);
-        const msg = "TTL caching without ttlAutopurge, max, or maxSize can result in unbounded memory consumption.";
-        emitWarning(msg, "UnboundedCacheWarning", code, _LRUCache);
-      }
-    }
-  }
-  /**
-   * Return the number of ms left in the item's TTL. If item is not in cache,
-   * returns `0`. Returns `Infinity` if item is in cache without a defined TTL.
-   */
-  getRemainingTTL(key) {
-    return this.#keyMap.has(key) ? Infinity : 0;
-  }
-  #initializeTTLTracking() {
-    const ttls = new ZeroArray(this.#max);
-    const starts = new ZeroArray(this.#max);
-    this.#ttls = ttls;
-    this.#starts = starts;
-    this.#setItemTTL = (index, ttl, start = perf.now()) => {
-      starts[index] = ttl !== 0 ? start : 0;
-      ttls[index] = ttl;
-      if (ttl !== 0 && this.ttlAutopurge) {
-        const t = setTimeout(() => {
-          if (this.#isStale(index)) {
-            this.#delete(this.#keyList[index], "expire");
-          }
-        }, ttl + 1);
-        if (t.unref) {
-          t.unref();
-        }
-      }
-    };
-    this.#updateItemAge = (index) => {
-      starts[index] = ttls[index] !== 0 ? perf.now() : 0;
-    };
-    this.#statusTTL = (status, index) => {
-      if (ttls[index]) {
-        const ttl = ttls[index];
-        const start = starts[index];
-        if (!ttl || !start)
-          return;
-        status.ttl = ttl;
-        status.start = start;
-        status.now = cachedNow || getNow();
-        const age = status.now - start;
-        status.remainingTTL = ttl - age;
-      }
-    };
-    let cachedNow = 0;
-    const getNow = () => {
-      const n = perf.now();
-      if (this.ttlResolution > 0) {
-        cachedNow = n;
-        const t = setTimeout(() => cachedNow = 0, this.ttlResolution);
-        if (t.unref) {
-          t.unref();
-        }
-      }
-      return n;
-    };
-    this.getRemainingTTL = (key) => {
-      const index = this.#keyMap.get(key);
-      if (index === void 0) {
-        return 0;
-      }
-      const ttl = ttls[index];
-      const start = starts[index];
-      if (!ttl || !start) {
-        return Infinity;
-      }
-      const age = (cachedNow || getNow()) - start;
-      return ttl - age;
-    };
-    this.#isStale = (index) => {
-      const s = starts[index];
-      const t = ttls[index];
-      return !!t && !!s && (cachedNow || getNow()) - s > t;
-    };
-  }
-  // conditionally set private methods related to TTL
-  #updateItemAge = () => {
-  };
-  #statusTTL = () => {
-  };
-  #setItemTTL = () => {
-  };
-  /* c8 ignore stop */
-  #isStale = () => false;
-  #initializeSizeTracking() {
-    const sizes = new ZeroArray(this.#max);
-    this.#calculatedSize = 0;
-    this.#sizes = sizes;
-    this.#removeItemSize = (index) => {
-      this.#calculatedSize -= sizes[index];
-      sizes[index] = 0;
-    };
-    this.#requireSize = (k, v, size, sizeCalculation) => {
-      if (this.#isBackgroundFetch(v)) {
-        return 0;
-      }
-      if (!isPosInt(size)) {
-        if (sizeCalculation) {
-          if (typeof sizeCalculation !== "function") {
-            throw new TypeError("sizeCalculation must be a function");
-          }
-          size = sizeCalculation(v, k);
-          if (!isPosInt(size)) {
-            throw new TypeError("sizeCalculation return invalid (expect positive integer)");
-          }
-        } else {
-          throw new TypeError("invalid size value (must be positive integer). When maxSize or maxEntrySize is used, sizeCalculation or size must be set.");
-        }
-      }
-      return size;
-    };
-    this.#addItemSize = (index, size, status) => {
-      sizes[index] = size;
-      if (this.#maxSize) {
-        const maxSize = this.#maxSize - sizes[index];
-        while (this.#calculatedSize > maxSize) {
-          this.#evict(true);
-        }
-      }
-      this.#calculatedSize += sizes[index];
-      if (status) {
-        status.entrySize = size;
-        status.totalCalculatedSize = this.#calculatedSize;
-      }
-    };
-  }
-  #removeItemSize = (_i) => {
-  };
-  #addItemSize = (_i, _s, _st) => {
-  };
-  #requireSize = (_k, _v, size, sizeCalculation) => {
-    if (size || sizeCalculation) {
-      throw new TypeError("cannot set size without setting maxSize or maxEntrySize on cache");
-    }
-    return 0;
-  };
-  *#indexes({ allowStale = this.allowStale } = {}) {
-    if (this.#size) {
-      for (let i = this.#tail; true; ) {
-        if (!this.#isValidIndex(i)) {
-          break;
-        }
-        if (allowStale || !this.#isStale(i)) {
-          yield i;
-        }
-        if (i === this.#head) {
-          break;
-        } else {
-          i = this.#prev[i];
-        }
-      }
-    }
-  }
-  *#rindexes({ allowStale = this.allowStale } = {}) {
-    if (this.#size) {
-      for (let i = this.#head; true; ) {
-        if (!this.#isValidIndex(i)) {
-          break;
-        }
-        if (allowStale || !this.#isStale(i)) {
-          yield i;
-        }
-        if (i === this.#tail) {
-          break;
-        } else {
-          i = this.#next[i];
-        }
-      }
-    }
-  }
-  #isValidIndex(index) {
-    return index !== void 0 && this.#keyMap.get(this.#keyList[index]) === index;
-  }
-  /**
-   * Return a generator yielding `[key, value]` pairs,
-   * in order from most recently used to least recently used.
-   */
-  *entries() {
-    for (const i of this.#indexes()) {
-      if (this.#valList[i] !== void 0 && this.#keyList[i] !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield [this.#keyList[i], this.#valList[i]];
-      }
-    }
-  }
-  /**
-   * Inverse order version of {@link LRUCache.entries}
-   *
-   * Return a generator yielding `[key, value]` pairs,
-   * in order from least recently used to most recently used.
-   */
-  *rentries() {
-    for (const i of this.#rindexes()) {
-      if (this.#valList[i] !== void 0 && this.#keyList[i] !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield [this.#keyList[i], this.#valList[i]];
-      }
-    }
-  }
-  /**
-   * Return a generator yielding the keys in the cache,
-   * in order from most recently used to least recently used.
-   */
-  *keys() {
-    for (const i of this.#indexes()) {
-      const k = this.#keyList[i];
-      if (k !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield k;
-      }
-    }
-  }
-  /**
-   * Inverse order version of {@link LRUCache.keys}
-   *
-   * Return a generator yielding the keys in the cache,
-   * in order from least recently used to most recently used.
-   */
-  *rkeys() {
-    for (const i of this.#rindexes()) {
-      const k = this.#keyList[i];
-      if (k !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield k;
-      }
-    }
-  }
-  /**
-   * Return a generator yielding the values in the cache,
-   * in order from most recently used to least recently used.
-   */
-  *values() {
-    for (const i of this.#indexes()) {
-      const v = this.#valList[i];
-      if (v !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield this.#valList[i];
-      }
-    }
-  }
-  /**
-   * Inverse order version of {@link LRUCache.values}
-   *
-   * Return a generator yielding the values in the cache,
-   * in order from least recently used to most recently used.
-   */
-  *rvalues() {
-    for (const i of this.#rindexes()) {
-      const v = this.#valList[i];
-      if (v !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield this.#valList[i];
-      }
-    }
-  }
-  /**
-   * Iterating over the cache itself yields the same results as
-   * {@link LRUCache.entries}
-   */
-  [Symbol.iterator]() {
-    return this.entries();
-  }
-  /**
-   * A String value that is used in the creation of the default string
-   * description of an object. Called by the built-in method
-   * `Object.prototype.toString`.
-   */
-  [Symbol.toStringTag] = "LRUCache";
-  /**
-   * Find a value for which the supplied fn method returns a truthy value,
-   * similar to `Array.find()`. fn is called as `fn(value, key, cache)`.
-   */
-  find(fn, getOptions = {}) {
-    for (const i of this.#indexes()) {
-      const v = this.#valList[i];
-      const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-      if (value === void 0)
-        continue;
-      if (fn(value, this.#keyList[i], this)) {
-        return this.get(this.#keyList[i], getOptions);
-      }
-    }
-  }
-  /**
-   * Call the supplied function on each item in the cache, in order from most
-   * recently used to least recently used.
-   *
-   * `fn` is called as `fn(value, key, cache)`.
-   *
-   * If `thisp` is provided, function will be called in the `this`-context of
-   * the provided object, or the cache if no `thisp` object is provided.
-   *
-   * Does not update age or recenty of use, or iterate over stale values.
-   */
-  forEach(fn, thisp = this) {
-    for (const i of this.#indexes()) {
-      const v = this.#valList[i];
-      const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-      if (value === void 0)
-        continue;
-      fn.call(thisp, value, this.#keyList[i], this);
-    }
-  }
-  /**
-   * The same as {@link LRUCache.forEach} but items are iterated over in
-   * reverse order.  (ie, less recently used items are iterated over first.)
-   */
-  rforEach(fn, thisp = this) {
-    for (const i of this.#rindexes()) {
-      const v = this.#valList[i];
-      const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-      if (value === void 0)
-        continue;
-      fn.call(thisp, value, this.#keyList[i], this);
-    }
-  }
-  /**
-   * Delete any stale entries. Returns true if anything was removed,
-   * false otherwise.
-   */
-  purgeStale() {
-    let deleted = false;
-    for (const i of this.#rindexes({ allowStale: true })) {
-      if (this.#isStale(i)) {
-        this.#delete(this.#keyList[i], "expire");
-        deleted = true;
-      }
-    }
-    return deleted;
-  }
-  /**
-   * Get the extended info about a given entry, to get its value, size, and
-   * TTL info simultaneously. Returns `undefined` if the key is not present.
-   *
-   * Unlike {@link LRUCache#dump}, which is designed to be portable and survive
-   * serialization, the `start` value is always the current timestamp, and the
-   * `ttl` is a calculated remaining time to live (negative if expired).
-   *
-   * Always returns stale values, if their info is found in the cache, so be
-   * sure to check for expirations (ie, a negative {@link LRUCache.Entry#ttl})
-   * if relevant.
-   */
-  info(key) {
-    const i = this.#keyMap.get(key);
-    if (i === void 0)
-      return void 0;
-    const v = this.#valList[i];
-    const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-    if (value === void 0)
-      return void 0;
-    const entry = { value };
-    if (this.#ttls && this.#starts) {
-      const ttl = this.#ttls[i];
-      const start = this.#starts[i];
-      if (ttl && start) {
-        const remain = ttl - (perf.now() - start);
-        entry.ttl = remain;
-        entry.start = Date.now();
-      }
-    }
-    if (this.#sizes) {
-      entry.size = this.#sizes[i];
-    }
-    return entry;
-  }
-  /**
-   * Return an array of [key, {@link LRUCache.Entry}] tuples which can be
-   * passed to {@link LRLUCache#load}.
-   *
-   * The `start` fields are calculated relative to a portable `Date.now()`
-   * timestamp, even if `performance.now()` is available.
-   *
-   * Stale entries are always included in the `dump`, even if
-   * {@link LRUCache.OptionsBase.allowStale} is false.
-   *
-   * Note: this returns an actual array, not a generator, so it can be more
-   * easily passed around.
-   */
-  dump() {
-    const arr = [];
-    for (const i of this.#indexes({ allowStale: true })) {
-      const key = this.#keyList[i];
-      const v = this.#valList[i];
-      const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-      if (value === void 0 || key === void 0)
-        continue;
-      const entry = { value };
-      if (this.#ttls && this.#starts) {
-        entry.ttl = this.#ttls[i];
-        const age = perf.now() - this.#starts[i];
-        entry.start = Math.floor(Date.now() - age);
-      }
-      if (this.#sizes) {
-        entry.size = this.#sizes[i];
-      }
-      arr.unshift([key, entry]);
-    }
-    return arr;
-  }
-  /**
-   * Reset the cache and load in the items in entries in the order listed.
-   *
-   * The shape of the resulting cache may be different if the same options are
-   * not used in both caches.
-   *
-   * The `start` fields are assumed to be calculated relative to a portable
-   * `Date.now()` timestamp, even if `performance.now()` is available.
-   */
-  load(arr) {
-    this.clear();
-    for (const [key, entry] of arr) {
-      if (entry.start) {
-        const age = Date.now() - entry.start;
-        entry.start = perf.now() - age;
-      }
-      this.set(key, entry.value, entry);
-    }
-  }
-  /**
-   * Add a value to the cache.
-   *
-   * Note: if `undefined` is specified as a value, this is an alias for
-   * {@link LRUCache#delete}
-   *
-   * Fields on the {@link LRUCache.SetOptions} options param will override
-   * their corresponding values in the constructor options for the scope
-   * of this single `set()` operation.
-   *
-   * If `start` is provided, then that will set the effective start
-   * time for the TTL calculation. Note that this must be a previous
-   * value of `performance.now()` if supported, or a previous value of
-   * `Date.now()` if not.
-   *
-   * Options object may also include `size`, which will prevent
-   * calling the `sizeCalculation` function and just use the specified
-   * number if it is a positive integer, and `noDisposeOnSet` which
-   * will prevent calling a `dispose` function in the case of
-   * overwrites.
-   *
-   * If the `size` (or return value of `sizeCalculation`) for a given
-   * entry is greater than `maxEntrySize`, then the item will not be
-   * added to the cache.
-   *
-   * Will update the recency of the entry.
-   *
-   * If the value is `undefined`, then this is an alias for
-   * `cache.delete(key)`. `undefined` is never stored in the cache.
-   */
-  set(k, v, setOptions = {}) {
-    if (v === void 0) {
-      this.delete(k);
-      return this;
-    }
-    const { ttl = this.ttl, start, noDisposeOnSet = this.noDisposeOnSet, sizeCalculation = this.sizeCalculation, status } = setOptions;
-    let { noUpdateTTL = this.noUpdateTTL } = setOptions;
-    const size = this.#requireSize(k, v, setOptions.size || 0, sizeCalculation);
-    if (this.maxEntrySize && size > this.maxEntrySize) {
-      if (status) {
-        status.set = "miss";
-        status.maxEntrySizeExceeded = true;
-      }
-      this.#delete(k, "set");
-      return this;
-    }
-    let index = this.#size === 0 ? void 0 : this.#keyMap.get(k);
-    if (index === void 0) {
-      index = this.#size === 0 ? this.#tail : this.#free.length !== 0 ? this.#free.pop() : this.#size === this.#max ? this.#evict(false) : this.#size;
-      this.#keyList[index] = k;
-      this.#valList[index] = v;
-      this.#keyMap.set(k, index);
-      this.#next[this.#tail] = index;
-      this.#prev[index] = this.#tail;
-      this.#tail = index;
-      this.#size++;
-      this.#addItemSize(index, size, status);
-      if (status)
-        status.set = "add";
-      noUpdateTTL = false;
-    } else {
-      this.#moveToTail(index);
-      const oldVal = this.#valList[index];
-      if (v !== oldVal) {
-        if (this.#hasFetchMethod && this.#isBackgroundFetch(oldVal)) {
-          oldVal.__abortController.abort(new Error("replaced"));
-          const { __staleWhileFetching: s } = oldVal;
-          if (s !== void 0 && !noDisposeOnSet) {
-            if (this.#hasDispose) {
-              this.#dispose?.(s, k, "set");
-            }
-            if (this.#hasDisposeAfter) {
-              this.#disposed?.push([s, k, "set"]);
-            }
-          }
-        } else if (!noDisposeOnSet) {
-          if (this.#hasDispose) {
-            this.#dispose?.(oldVal, k, "set");
-          }
-          if (this.#hasDisposeAfter) {
-            this.#disposed?.push([oldVal, k, "set"]);
-          }
-        }
-        this.#removeItemSize(index);
-        this.#addItemSize(index, size, status);
-        this.#valList[index] = v;
-        if (status) {
-          status.set = "replace";
-          const oldValue = oldVal && this.#isBackgroundFetch(oldVal) ? oldVal.__staleWhileFetching : oldVal;
-          if (oldValue !== void 0)
-            status.oldValue = oldValue;
-        }
-      } else if (status) {
-        status.set = "update";
-      }
-    }
-    if (ttl !== 0 && !this.#ttls) {
-      this.#initializeTTLTracking();
-    }
-    if (this.#ttls) {
-      if (!noUpdateTTL) {
-        this.#setItemTTL(index, ttl, start);
-      }
-      if (status)
-        this.#statusTTL(status, index);
-    }
-    if (!noDisposeOnSet && this.#hasDisposeAfter && this.#disposed) {
-      const dt = this.#disposed;
-      let task;
-      while (task = dt?.shift()) {
-        this.#disposeAfter?.(...task);
-      }
-    }
-    return this;
-  }
-  /**
-   * Evict the least recently used item, returning its value or
-   * `undefined` if cache is empty.
-   */
-  pop() {
-    try {
-      while (this.#size) {
-        const val = this.#valList[this.#head];
-        this.#evict(true);
-        if (this.#isBackgroundFetch(val)) {
-          if (val.__staleWhileFetching) {
-            return val.__staleWhileFetching;
-          }
-        } else if (val !== void 0) {
-          return val;
-        }
-      }
-    } finally {
-      if (this.#hasDisposeAfter && this.#disposed) {
-        const dt = this.#disposed;
-        let task;
-        while (task = dt?.shift()) {
-          this.#disposeAfter?.(...task);
-        }
-      }
-    }
-  }
-  #evict(free) {
-    const head = this.#head;
-    const k = this.#keyList[head];
-    const v = this.#valList[head];
-    if (this.#hasFetchMethod && this.#isBackgroundFetch(v)) {
-      v.__abortController.abort(new Error("evicted"));
-    } else if (this.#hasDispose || this.#hasDisposeAfter) {
-      if (this.#hasDispose) {
-        this.#dispose?.(v, k, "evict");
-      }
-      if (this.#hasDisposeAfter) {
-        this.#disposed?.push([v, k, "evict"]);
-      }
-    }
-    this.#removeItemSize(head);
-    if (free) {
-      this.#keyList[head] = void 0;
-      this.#valList[head] = void 0;
-      this.#free.push(head);
-    }
-    if (this.#size === 1) {
-      this.#head = this.#tail = 0;
-      this.#free.length = 0;
-    } else {
-      this.#head = this.#next[head];
-    }
-    this.#keyMap.delete(k);
-    this.#size--;
-    return head;
-  }
-  /**
-   * Check if a key is in the cache, without updating the recency of use.
-   * Will return false if the item is stale, even though it is technically
-   * in the cache.
-   *
-   * Check if a key is in the cache, without updating the recency of
-   * use. Age is updated if {@link LRUCache.OptionsBase.updateAgeOnHas} is set
-   * to `true` in either the options or the constructor.
-   *
-   * Will return `false` if the item is stale, even though it is technically in
-   * the cache. The difference can be determined (if it matters) by using a
-   * `status` argument, and inspecting the `has` field.
-   *
-   * Will not update item age unless
-   * {@link LRUCache.OptionsBase.updateAgeOnHas} is set.
-   */
-  has(k, hasOptions = {}) {
-    const { updateAgeOnHas = this.updateAgeOnHas, status } = hasOptions;
-    const index = this.#keyMap.get(k);
-    if (index !== void 0) {
-      const v = this.#valList[index];
-      if (this.#isBackgroundFetch(v) && v.__staleWhileFetching === void 0) {
-        return false;
-      }
-      if (!this.#isStale(index)) {
-        if (updateAgeOnHas) {
-          this.#updateItemAge(index);
-        }
-        if (status) {
-          status.has = "hit";
-          this.#statusTTL(status, index);
-        }
-        return true;
-      } else if (status) {
-        status.has = "stale";
-        this.#statusTTL(status, index);
-      }
-    } else if (status) {
-      status.has = "miss";
-    }
-    return false;
-  }
-  /**
-   * Like {@link LRUCache#get} but doesn't update recency or delete stale
-   * items.
-   *
-   * Returns `undefined` if the item is stale, unless
-   * {@link LRUCache.OptionsBase.allowStale} is set.
-   */
-  peek(k, peekOptions = {}) {
-    const { allowStale = this.allowStale } = peekOptions;
-    const index = this.#keyMap.get(k);
-    if (index === void 0 || !allowStale && this.#isStale(index)) {
+  bumpLru(item) {
+    if (this.last === item) {
       return;
     }
-    const v = this.#valList[index];
-    return this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-  }
-  #backgroundFetch(k, index, options, context) {
-    const v = index === void 0 ? void 0 : this.#valList[index];
-    if (this.#isBackgroundFetch(v)) {
-      return v;
+    const last = this.last;
+    const next = item.next;
+    const prev = item.prev;
+    if (this.first === item) {
+      this.first = next;
     }
-    const ac = new AC();
-    const { signal } = options;
-    signal?.addEventListener("abort", () => ac.abort(signal.reason), {
-      signal: ac.signal
-    });
-    const fetchOpts = {
-      signal: ac.signal,
-      options,
-      context
-    };
-    const cb = (v2, updateCache = false) => {
-      const { aborted } = ac.signal;
-      const ignoreAbort = options.ignoreFetchAbort && v2 !== void 0;
-      if (options.status) {
-        if (aborted && !updateCache) {
-          options.status.fetchAborted = true;
-          options.status.fetchError = ac.signal.reason;
-          if (ignoreAbort)
-            options.status.fetchAbortIgnored = true;
-        } else {
-          options.status.fetchResolved = true;
-        }
-      }
-      if (aborted && !ignoreAbort && !updateCache) {
-        return fetchFail(ac.signal.reason);
-      }
-      const bf2 = p;
-      if (this.#valList[index] === p) {
-        if (v2 === void 0) {
-          if (bf2.__staleWhileFetching) {
-            this.#valList[index] = bf2.__staleWhileFetching;
-          } else {
-            this.#delete(k, "fetch");
-          }
-        } else {
-          if (options.status)
-            options.status.fetchUpdated = true;
-          this.set(k, v2, fetchOpts.options);
-        }
-      }
-      return v2;
-    };
-    const eb = (er) => {
-      if (options.status) {
-        options.status.fetchRejected = true;
-        options.status.fetchError = er;
-      }
-      return fetchFail(er);
-    };
-    const fetchFail = (er) => {
-      const { aborted } = ac.signal;
-      const allowStaleAborted = aborted && options.allowStaleOnFetchAbort;
-      const allowStale = allowStaleAborted || options.allowStaleOnFetchRejection;
-      const noDelete = allowStale || options.noDeleteOnFetchRejection;
-      const bf2 = p;
-      if (this.#valList[index] === p) {
-        const del = !noDelete || bf2.__staleWhileFetching === void 0;
-        if (del) {
-          this.#delete(k, "fetch");
-        } else if (!allowStaleAborted) {
-          this.#valList[index] = bf2.__staleWhileFetching;
-        }
-      }
-      if (allowStale) {
-        if (options.status && bf2.__staleWhileFetching !== void 0) {
-          options.status.returnedStale = true;
-        }
-        return bf2.__staleWhileFetching;
-      } else if (bf2.__returned === bf2) {
-        throw er;
-      }
-    };
-    const pcall = (res, rej) => {
-      const fmp = this.#fetchMethod?.(k, v, fetchOpts);
-      if (fmp && fmp instanceof Promise) {
-        fmp.then((v2) => res(v2 === void 0 ? void 0 : v2), rej);
-      }
-      ac.signal.addEventListener("abort", () => {
-        if (!options.ignoreFetchAbort || options.allowStaleOnFetchAbort) {
-          res(void 0);
-          if (options.allowStaleOnFetchAbort) {
-            res = (v2) => cb(v2, true);
-          }
-        }
-      });
-    };
-    if (options.status)
-      options.status.fetchDispatched = true;
-    const p = new Promise(pcall).then(cb, eb);
-    const bf = Object.assign(p, {
-      __abortController: ac,
-      __staleWhileFetching: v,
-      __returned: void 0
-    });
-    if (index === void 0) {
-      this.set(k, bf, { ...fetchOpts.options, status: void 0 });
-      index = this.#keyMap.get(k);
-    } else {
-      this.#valList[index] = bf;
+    item.next = null;
+    item.prev = last;
+    last.next = item;
+    if (prev !== null) {
+      prev.next = next;
     }
-    return bf;
-  }
-  #isBackgroundFetch(p) {
-    if (!this.#hasFetchMethod)
-      return false;
-    const b = p;
-    return !!b && b instanceof Promise && b.hasOwnProperty("__staleWhileFetching") && b.__abortController instanceof AC;
-  }
-  async fetch(k, fetchOptions = {}) {
-    const {
-      // get options
-      allowStale = this.allowStale,
-      updateAgeOnGet = this.updateAgeOnGet,
-      noDeleteOnStaleGet = this.noDeleteOnStaleGet,
-      // set options
-      ttl = this.ttl,
-      noDisposeOnSet = this.noDisposeOnSet,
-      size = 0,
-      sizeCalculation = this.sizeCalculation,
-      noUpdateTTL = this.noUpdateTTL,
-      // fetch exclusive options
-      noDeleteOnFetchRejection = this.noDeleteOnFetchRejection,
-      allowStaleOnFetchRejection = this.allowStaleOnFetchRejection,
-      ignoreFetchAbort = this.ignoreFetchAbort,
-      allowStaleOnFetchAbort = this.allowStaleOnFetchAbort,
-      context,
-      forceRefresh = false,
-      status,
-      signal
-    } = fetchOptions;
-    if (!this.#hasFetchMethod) {
-      if (status)
-        status.fetch = "get";
-      return this.get(k, {
-        allowStale,
-        updateAgeOnGet,
-        noDeleteOnStaleGet,
-        status
-      });
+    if (next !== null) {
+      next.prev = prev;
     }
-    const options = {
-      allowStale,
-      updateAgeOnGet,
-      noDeleteOnStaleGet,
-      ttl,
-      noDisposeOnSet,
-      size,
-      sizeCalculation,
-      noUpdateTTL,
-      noDeleteOnFetchRejection,
-      allowStaleOnFetchRejection,
-      allowStaleOnFetchAbort,
-      ignoreFetchAbort,
-      status,
-      signal
-    };
-    let index = this.#keyMap.get(k);
-    if (index === void 0) {
-      if (status)
-        status.fetch = "miss";
-      const p = this.#backgroundFetch(k, index, options, context);
-      return p.__returned = p;
-    } else {
-      const v = this.#valList[index];
-      if (this.#isBackgroundFetch(v)) {
-        const stale = allowStale && v.__staleWhileFetching !== void 0;
-        if (status) {
-          status.fetch = "inflight";
-          if (stale)
-            status.returnedStale = true;
-        }
-        return stale ? v.__staleWhileFetching : v.__returned = v;
-      }
-      const isStale = this.#isStale(index);
-      if (!forceRefresh && !isStale) {
-        if (status)
-          status.fetch = "hit";
-        this.#moveToTail(index);
-        if (updateAgeOnGet) {
-          this.#updateItemAge(index);
-        }
-        if (status)
-          this.#statusTTL(status, index);
-        return v;
-      }
-      const p = this.#backgroundFetch(k, index, options, context);
-      const hasStale = p.__staleWhileFetching !== void 0;
-      const staleVal = hasStale && allowStale;
-      if (status) {
-        status.fetch = isStale ? "stale" : "refresh";
-        if (staleVal && isStale)
-          status.returnedStale = true;
-      }
-      return staleVal ? p.__staleWhileFetching : p.__returned = p;
-    }
+    this.last = item;
   }
-  async forceFetch(k, fetchOptions = {}) {
-    const v = await this.fetch(k, fetchOptions);
-    if (v === void 0)
-      throw new Error("fetch() returned undefined");
-    return v;
-  }
-  memo(k, memoOptions = {}) {
-    const memoMethod = this.#memoMethod;
-    if (!memoMethod) {
-      throw new Error("no memoMethod provided to constructor");
-    }
-    const { context, forceRefresh, ...options } = memoOptions;
-    const v = this.get(k, options);
-    if (!forceRefresh && v !== void 0)
-      return v;
-    const vv = memoMethod(k, v, {
-      options,
-      context
-    });
-    this.set(k, vv, options);
-    return vv;
-  }
-  /**
-   * Return a value from the cache. Will update the recency of the cache
-   * entry found.
-   *
-   * If the key is not found, get() will return `undefined`.
-   */
-  get(k, getOptions = {}) {
-    const { allowStale = this.allowStale, updateAgeOnGet = this.updateAgeOnGet, noDeleteOnStaleGet = this.noDeleteOnStaleGet, status } = getOptions;
-    const index = this.#keyMap.get(k);
-    if (index !== void 0) {
-      const value = this.#valList[index];
-      const fetching = this.#isBackgroundFetch(value);
-      if (status)
-        this.#statusTTL(status, index);
-      if (this.#isStale(index)) {
-        if (status)
-          status.get = "stale";
-        if (!fetching) {
-          if (!noDeleteOnStaleGet) {
-            this.#delete(k, "expire");
-          }
-          if (status && allowStale)
-            status.returnedStale = true;
-          return allowStale ? value : void 0;
-        } else {
-          if (status && allowStale && value.__staleWhileFetching !== void 0) {
-            status.returnedStale = true;
-          }
-          return allowStale ? value.__staleWhileFetching : void 0;
-        }
-      } else {
-        if (status)
-          status.get = "hit";
-        if (fetching) {
-          return value.__staleWhileFetching;
-        }
-        this.#moveToTail(index);
-        if (updateAgeOnGet) {
-          this.#updateItemAge(index);
-        }
-        return value;
-      }
-    } else if (status) {
-      status.get = "miss";
-    }
-  }
-  #connect(p, n) {
-    this.#prev[n] = p;
-    this.#next[p] = n;
-  }
-  #moveToTail(index) {
-    if (index !== this.#tail) {
-      if (index === this.#head) {
-        this.#head = this.#next[index];
-      } else {
-        this.#connect(this.#prev[index], this.#next[index]);
-      }
-      this.#connect(this.#tail, index);
-      this.#tail = index;
-    }
-  }
-  /**
-   * Deletes a key out of the cache.
-   *
-   * Returns true if the key was deleted, false otherwise.
-   */
-  delete(k) {
-    return this.#delete(k, "delete");
-  }
-  #delete(k, reason) {
-    let deleted = false;
-    if (this.#size !== 0) {
-      const index = this.#keyMap.get(k);
-      if (index !== void 0) {
-        deleted = true;
-        if (this.#size === 1) {
-          this.#clear(reason);
-        } else {
-          this.#removeItemSize(index);
-          const v = this.#valList[index];
-          if (this.#isBackgroundFetch(v)) {
-            v.__abortController.abort(new Error("deleted"));
-          } else if (this.#hasDispose || this.#hasDisposeAfter) {
-            if (this.#hasDispose) {
-              this.#dispose?.(v, k, reason);
-            }
-            if (this.#hasDisposeAfter) {
-              this.#disposed?.push([v, k, reason]);
-            }
-          }
-          this.#keyMap.delete(k);
-          this.#keyList[index] = void 0;
-          this.#valList[index] = void 0;
-          if (index === this.#tail) {
-            this.#tail = this.#prev[index];
-          } else if (index === this.#head) {
-            this.#head = this.#next[index];
-          } else {
-            const pi = this.#prev[index];
-            this.#next[pi] = this.#next[index];
-            const ni = this.#next[index];
-            this.#prev[ni] = this.#prev[index];
-          }
-          this.#size--;
-          this.#free.push(index);
-        }
-      }
-    }
-    if (this.#hasDisposeAfter && this.#disposed?.length) {
-      const dt = this.#disposed;
-      let task;
-      while (task = dt?.shift()) {
-        this.#disposeAfter?.(...task);
-      }
-    }
-    return deleted;
-  }
-  /**
-   * Clear the cache entirely, throwing away all values.
-   */
   clear() {
-    return this.#clear("delete");
+    this.items = /* @__PURE__ */ Object.create(null);
+    this.first = null;
+    this.last = null;
+    this.size = 0;
   }
-  #clear(reason) {
-    for (const index of this.#rindexes({ allowStale: true })) {
-      const v = this.#valList[index];
-      if (this.#isBackgroundFetch(v)) {
-        v.__abortController.abort(new Error("deleted"));
+  delete(key) {
+    if (Object.prototype.hasOwnProperty.call(this.items, key)) {
+      const item = this.items[key];
+      delete this.items[key];
+      this.size--;
+      if (item.prev !== null) {
+        item.prev.next = item.next;
+      }
+      if (item.next !== null) {
+        item.next.prev = item.prev;
+      }
+      if (this.first === item) {
+        this.first = item.next;
+      }
+      if (this.last === item) {
+        this.last = item.prev;
+      }
+    }
+  }
+  deleteMany(keys) {
+    for (var i = 0; i < keys.length; i++) {
+      this.delete(keys[i]);
+    }
+  }
+  evict() {
+    if (this.size > 0) {
+      const item = this.first;
+      delete this.items[item.key];
+      if (--this.size === 0) {
+        this.first = null;
+        this.last = null;
       } else {
-        const k = this.#keyList[index];
-        if (this.#hasDispose) {
-          this.#dispose?.(v, k, reason);
-        }
-        if (this.#hasDisposeAfter) {
-          this.#disposed?.push([v, k, reason]);
-        }
+        this.first = item.next;
+        this.first.prev = null;
       }
     }
-    this.#keyMap.clear();
-    this.#valList.fill(void 0);
-    this.#keyList.fill(void 0);
-    if (this.#ttls && this.#starts) {
-      this.#ttls.fill(0);
-      this.#starts.fill(0);
+  }
+  expiresAt(key) {
+    if (Object.prototype.hasOwnProperty.call(this.items, key)) {
+      return this.items[key].expiry;
     }
-    if (this.#sizes) {
-      this.#sizes.fill(0);
-    }
-    this.#head = 0;
-    this.#tail = 0;
-    this.#free.length = 0;
-    this.#calculatedSize = 0;
-    this.#size = 0;
-    if (this.#hasDisposeAfter && this.#disposed) {
-      const dt = this.#disposed;
-      let task;
-      while (task = dt?.shift()) {
-        this.#disposeAfter?.(...task);
+  }
+  get(key) {
+    if (Object.prototype.hasOwnProperty.call(this.items, key)) {
+      const item = this.items[key];
+      if (this.ttl > 0 && item.expiry <= Date.now()) {
+        this.delete(key);
+        return;
       }
+      this.bumpLru(item);
+      return item.value;
     }
+  }
+  getMany(keys) {
+    const result = [];
+    for (var i = 0; i < keys.length; i++) {
+      result.push(this.get(keys[i]));
+    }
+    return result;
+  }
+  keys() {
+    return Object.keys(this.items);
+  }
+  set(key, value) {
+    if (Object.prototype.hasOwnProperty.call(this.items, key)) {
+      const item2 = this.items[key];
+      item2.value = value;
+      item2.expiry = this.ttl > 0 ? Date.now() + this.ttl : this.ttl;
+      if (this.last !== item2) {
+        this.bumpLru(item2);
+      }
+      return;
+    }
+    if (this.max > 0 && this.size === this.max) {
+      this.evict();
+    }
+    const item = {
+      expiry: this.ttl > 0 ? Date.now() + this.ttl : this.ttl,
+      key,
+      prev: this.last,
+      next: null,
+      value
+    };
+    this.items[key] = item;
+    if (++this.size === 1) {
+      this.first = item;
+    } else {
+      this.last.next = item;
+    }
+    this.last = item;
   }
 };
 
@@ -7102,11 +6149,16 @@ async function getAppAuthentication({
   timeDifference
 }) {
   try {
-    const appAuthentication = await githubAppJwt({
+    const authOptions = {
       id: appId,
-      privateKey,
-      now: timeDifference && Math.floor(Date.now() / 1e3) + timeDifference
-    });
+      privateKey
+    };
+    if (timeDifference) {
+      Object.assign(authOptions, {
+        now: Math.floor(Date.now() / 1e3) + timeDifference
+      });
+    }
+    const appAuthentication = await githubAppJwt(authOptions);
     return {
       type: "app",
       token: appAuthentication.token,
@@ -7124,12 +6176,12 @@ async function getAppAuthentication({
   }
 }
 function getCache() {
-  return new LRUCache({
+  return new LruObject(
     // cache max. 15000 tokens, that will use less than 10mb memory
-    max: 15e3,
+    15e3,
     // Cache for 1 minute less than GitHub expiry
-    ttl: 1e3 * 60 * 59
-  });
+    1e3 * 60 * 59
+  );
 }
 async function get2(cache, options) {
   const cacheKey = optionsToCacheKey(options);
@@ -7236,15 +6288,30 @@ async function getInstallationAuthentication(state, options, customRequest) {
     };
     return factory(factoryAuthOptions);
   }
-  const optionsWithInstallationTokenFromState = Object.assign(
-    { installationId },
-    options
+  const request2 = customRequest || state.request;
+  return getInstallationAuthenticationConcurrently(
+    state,
+    { ...options, installationId },
+    request2
   );
+}
+var pendingPromises = /* @__PURE__ */ new Map();
+function getInstallationAuthenticationConcurrently(state, options, request2) {
+  const cacheKey = optionsToCacheKey(options);
+  if (pendingPromises.has(cacheKey)) {
+    return pendingPromises.get(cacheKey);
+  }
+  const promise = getInstallationAuthenticationImpl(
+    state,
+    options,
+    request2
+  ).finally(() => pendingPromises.delete(cacheKey));
+  pendingPromises.set(cacheKey, promise);
+  return promise;
+}
+async function getInstallationAuthenticationImpl(state, options, request2) {
   if (!options.refresh) {
-    const result = await get2(
-      state.cache,
-      optionsWithInstallationTokenFromState
-    );
+    const result = await get2(state.cache, options);
     if (result) {
       const {
         token: token2,
@@ -7257,7 +6324,7 @@ async function getInstallationAuthentication(state, options, customRequest) {
         repositorySelection: repositorySelection2
       } = result;
       return toTokenAuthentication({
-        installationId,
+        installationId: options.installationId,
         token: token2,
         createdAt: createdAt2,
         expiresAt: expiresAt2,
@@ -7270,7 +6337,26 @@ async function getInstallationAuthentication(state, options, customRequest) {
     }
   }
   const appAuthentication = await getAppAuthentication(state);
-  const request2 = customRequest || state.request;
+  const payload = {
+    installation_id: options.installationId,
+    mediaType: {
+      previews: ["machine-man"]
+    },
+    headers: {
+      authorization: `bearer ${appAuthentication.token}`
+    }
+  };
+  if (options.repositoryIds) {
+    Object.assign(payload, { repository_ids: options.repositoryIds });
+  }
+  if (options.repositoryNames) {
+    Object.assign(payload, {
+      repositories: options.repositoryNames
+    });
+  }
+  if (options.permissions) {
+    Object.assign(payload, { permissions: options.permissions });
+  }
   const {
     data: {
       token,
@@ -7280,44 +6366,42 @@ async function getInstallationAuthentication(state, options, customRequest) {
       repository_selection: repositorySelectionOptional,
       single_file: singleFileName
     }
-  } = await request2("POST /app/installations/{installation_id}/access_tokens", {
-    installation_id: installationId,
-    repository_ids: options.repositoryIds,
-    repositories: options.repositoryNames,
-    permissions: options.permissions,
-    mediaType: {
-      previews: ["machine-man"]
-    },
-    headers: {
-      authorization: `bearer ${appAuthentication.token}`
-    }
-  });
+  } = await request2(
+    "POST /app/installations/{installation_id}/access_tokens",
+    payload
+  );
   const permissions = permissionsOptional || {};
   const repositorySelection = repositorySelectionOptional || "all";
   const repositoryIds = repositories ? repositories.map((r) => r.id) : void 0;
   const repositoryNames = repositories ? repositories.map((repo) => repo.name) : void 0;
   const createdAt = (/* @__PURE__ */ new Date()).toISOString();
-  await set2(state.cache, optionsWithInstallationTokenFromState, {
+  const cacheOptions = {
     token,
     createdAt,
     expiresAt,
     repositorySelection,
     permissions,
     repositoryIds,
-    repositoryNames,
-    singleFileName
-  });
-  return toTokenAuthentication({
-    installationId,
+    repositoryNames
+  };
+  if (singleFileName) {
+    Object.assign(payload, { singleFileName });
+  }
+  await set2(state.cache, options, cacheOptions);
+  const cacheData = {
+    installationId: options.installationId,
     token,
     createdAt,
     expiresAt,
     repositorySelection,
     permissions,
     repositoryIds,
-    repositoryNames,
-    singleFileName
-  });
+    repositoryNames
+  };
+  if (singleFileName) {
+    Object.assign(cacheData, { singleFileName });
+  }
+  return toTokenAuthentication(cacheData);
 }
 async function auth5(state, authOptions) {
   switch (authOptions.type) {
@@ -7423,7 +6507,7 @@ async function hook5(state, request2, route, parameters) {
     state,
     // @ts-expect-error TBD
     {},
-    request2
+    request2.defaults({ baseUrl: endpoint2.baseUrl })
   );
   endpoint2.headers.authorization = `token ${token}`;
   return sendRequestWithRetries(
@@ -7456,7 +6540,7 @@ async function sendRequestWithRetries(state, request2, options, createdAt, retri
     return sendRequestWithRetries(state, request2, options, createdAt, retries);
   }
 }
-var VERSION12 = "7.1.0";
+var VERSION12 = "8.0.2";
 function createAppAuth(options) {
   if (!options.appId) {
     throw new Error("[@octokit/auth-app] appId option is required");
@@ -7469,12 +6553,10 @@ function createAppAuth(options) {
       "[@octokit/auth-app] installationId is set to a falsy value"
     );
   }
-  const log = Object.assign(
-    {
-      warn: console.warn.bind(console)
-    },
-    options.log
-  );
+  const log = options.log || {};
+  if (typeof log.warn !== "function") {
+    log.warn = console.warn.bind(console);
+  }
   const request2 = options.request || request.defaults({
     headers: {
       "user-agent": `octokit-auth-app.js/${VERSION12} ${getUserAgent()}`
@@ -7568,7 +6650,7 @@ var createUnauthenticatedAuth = function createUnauthenticatedAuth2(options) {
 };
 
 // node_modules/@octokit/oauth-app/dist-node/index.js
-var VERSION13 = "7.1.3";
+var VERSION13 = "8.0.1";
 function addEventHandler(state, eventName, eventHandler) {
   if (Array.isArray(eventName)) {
     for (const singleEventName of eventName) {
@@ -7813,7 +6895,7 @@ async function deleteTokenWithState(state, options) {
     clientType: "oauth-app",
     ...optionsWithDefaults
   }) : (
-    // istanbul ignore next
+    /* v8 ignore next 4 */
     await deleteToken({
       clientType: "github-app",
       ...optionsWithDefaults
@@ -7843,7 +6925,7 @@ async function deleteAuthorizationWithState(state, options) {
     clientType: "oauth-app",
     ...optionsWithDefaults
   }) : (
-    // istanbul ignore next
+    /* v8 ignore next 4 */
     await deleteAuthorization({
       clientType: "github-app",
       ...optionsWithDefaults
@@ -7934,12 +7016,22 @@ async function handleRequest(app, { pathPrefix = "/api/github/oauth" }, request2
   const headers = request2.headers;
   try {
     if (route === routes.getLogin) {
-      const { url } = app.getWebFlowAuthorizationUrl({
-        state: query.state,
-        scopes: query.scopes ? query.scopes.split(",") : void 0,
-        allowSignup: query.allowSignup ? query.allowSignup === "true" : void 0,
-        redirectUrl: query.redirectUrl
-      });
+      const authOptions = {};
+      if (query.state) {
+        Object.assign(authOptions, { state: query.state });
+      }
+      if (query.scopes) {
+        Object.assign(authOptions, { scopes: query.scopes.split(",") });
+      }
+      if (query.allowSignup) {
+        Object.assign(authOptions, {
+          allowSignup: query.allowSignup === "true"
+        });
+      }
+      if (query.redirectUrl) {
+        Object.assign(authOptions, { redirectUrl: query.redirectUrl });
+      }
+      const { url } = app.getWebFlowAuthorizationUrl(authOptions);
       return { status: 302, headers: { location: url } };
     }
     if (route === routes.getCallback) {
@@ -8219,10 +7311,10 @@ var OAuthApp = class {
 };
 
 // node_modules/@octokit/webhooks-methods/dist-node/index.js
-var import_node_crypto2 = require("node:crypto");
 var import_node_crypto3 = require("node:crypto");
+var import_node_crypto4 = require("node:crypto");
 var import_node_buffer = require("node:buffer");
-var VERSION14 = "5.1.0";
+var VERSION14 = "6.0.0";
 async function sign(secret, payload) {
   if (!secret || !payload) {
     throw new TypeError(
@@ -8233,7 +7325,7 @@ async function sign(secret, payload) {
     throw new TypeError("[@octokit/webhooks-methods] payload must be a string");
   }
   const algorithm = "sha256";
-  return `${algorithm}=${(0, import_node_crypto2.createHmac)(algorithm, secret).update(payload).digest("hex")}`;
+  return `${algorithm}=${(0, import_node_crypto3.createHmac)(algorithm, secret).update(payload).digest("hex")}`;
 }
 sign.VERSION = VERSION14;
 async function verify(secret, eventPayload, signature) {
@@ -8252,20 +7344,43 @@ async function verify(secret, eventPayload, signature) {
   if (signatureBuffer.length !== verificationBuffer.length) {
     return false;
   }
-  return (0, import_node_crypto3.timingSafeEqual)(signatureBuffer, verificationBuffer);
+  return (0, import_node_crypto4.timingSafeEqual)(signatureBuffer, verificationBuffer);
 }
 verify.VERSION = VERSION14;
+async function verifyWithFallback(secret, payload, signature, additionalSecrets) {
+  const firstPass = await verify(secret, payload, signature);
+  if (firstPass) {
+    return true;
+  }
+  if (additionalSecrets !== void 0) {
+    for (const s of additionalSecrets) {
+      const v = await verify(s, payload, signature);
+      if (v) {
+        return v;
+      }
+    }
+  }
+  return false;
+}
 
 // node_modules/@octokit/webhooks/dist-bundle/index.js
-var createLogger = (logger) => ({
-  debug: () => {
-  },
-  info: () => {
-  },
-  warn: console.warn.bind(console),
-  error: console.error.bind(console),
-  ...logger
-});
+var createLogger2 = (logger = {}) => {
+  if (typeof logger.debug !== "function") {
+    logger.debug = () => {
+    };
+  }
+  if (typeof logger.info !== "function") {
+    logger.info = () => {
+    };
+  }
+  if (typeof logger.warn !== "function") {
+    logger.warn = console.warn.bind(console);
+  }
+  if (typeof logger.error !== "function") {
+    logger.error = console.error.bind(console);
+  }
+  return logger;
+};
 var emitterEventNames = [
   "branch_protection_configuration",
   "branch_protection_configuration.disabled",
@@ -8296,6 +7411,7 @@ var emitterEventNames = [
   "custom_property",
   "custom_property.created",
   "custom_property.deleted",
+  "custom_property.promote_to_enterprise",
   "custom_property.updated",
   "custom_property_values",
   "custom_property_values.updated",
@@ -8373,10 +7489,12 @@ var emitterEventNames = [
   "issues.pinned",
   "issues.reopened",
   "issues.transferred",
+  "issues.typed",
   "issues.unassigned",
   "issues.unlabeled",
   "issues.unlocked",
   "issues.unpinned",
+  "issues.untyped",
   "label",
   "label.created",
   "label.deleted",
@@ -8455,6 +7573,10 @@ var emitterEventNames = [
   "projects_v2_item.edited",
   "projects_v2_item.reordered",
   "projects_v2_item.restored",
+  "projects_v2_status_update",
+  "projects_v2_status_update.created",
+  "projects_v2_status_update.deleted",
+  "projects_v2_status_update.edited",
   "public",
   "pull_request",
   "pull_request.assigned",
@@ -8528,12 +7650,14 @@ var emitterEventNames = [
   "repository_vulnerability_alert.resolve",
   "secret_scanning_alert",
   "secret_scanning_alert.created",
+  "secret_scanning_alert.publicly_leaked",
   "secret_scanning_alert.reopened",
   "secret_scanning_alert.resolved",
-  "secret_scanning_alert.revoked",
   "secret_scanning_alert.validated",
   "secret_scanning_alert_location",
   "secret_scanning_alert_location.created",
+  "secret_scanning_scan",
+  "secret_scanning_scan.completed",
   "security_advisory",
   "security_advisory.published",
   "security_advisory.updated",
@@ -8550,6 +7674,11 @@ var emitterEventNames = [
   "star.created",
   "star.deleted",
   "status",
+  "sub_issues",
+  "sub_issues.parent_issue_added",
+  "sub_issues.parent_issue_removed",
+  "sub_issues.sub_issue_added",
+  "sub_issues.sub_issue_removed",
   "team",
   "team.added_to_repository",
   "team.created",
@@ -8570,6 +7699,35 @@ var emitterEventNames = [
   "workflow_run.in_progress",
   "workflow_run.requested"
 ];
+function validateEventName(eventName, options = {}) {
+  if (typeof eventName !== "string") {
+    throw new TypeError("eventName must be of type string");
+  }
+  if (eventName === "*") {
+    throw new TypeError(
+      `Using the "*" event with the regular Webhooks.on() function is not supported. Please use the Webhooks.onAny() method instead`
+    );
+  }
+  if (eventName === "error") {
+    throw new TypeError(
+      `Using the "error" event with the regular Webhooks.on() function is not supported. Please use the Webhooks.onError() method instead`
+    );
+  }
+  if (options.onUnknownEventName === "ignore") {
+    return;
+  }
+  if (!emitterEventNames.includes(eventName)) {
+    if (options.onUnknownEventName !== "warn") {
+      throw new TypeError(
+        `"${eventName}" is not a known webhook name (https://developer.github.com/v3/activity/events/types/)`
+      );
+    } else {
+      (options.log || console).warn(
+        `"${eventName}" is not a known webhook name (https://developer.github.com/v3/activity/events/types/)`
+      );
+    }
+  }
+}
 function handleEventHandlers(state, webhookName, handler2) {
   if (!state.hooks[webhookName]) {
     state.hooks[webhookName] = [];
@@ -8583,16 +7741,10 @@ function receiverOn(state, webhookNameOrNames, handler2) {
     );
     return;
   }
-  if (["*", "error"].includes(webhookNameOrNames)) {
-    const webhookName = webhookNameOrNames === "*" ? "any" : webhookNameOrNames;
-    const message = `Using the "${webhookNameOrNames}" event with the regular Webhooks.on() function is not supported. Please use the Webhooks.on${webhookName.charAt(0).toUpperCase() + webhookName.slice(1)}() method instead`;
-    throw new Error(message);
-  }
-  if (!emitterEventNames.includes(webhookNameOrNames)) {
-    state.log.warn(
-      `"${webhookNameOrNames}" is not a known webhook name (https://developer.github.com/v3/activity/events/types/)`
-    );
-  }
+  validateEventName(webhookNameOrNames, {
+    onUnknownEventName: "warn",
+    log: state.log
+  });
   handleEventHandlers(state, webhookNameOrNames, handler2);
 }
 function receiverOnAny(state, handler2) {
@@ -8693,7 +7845,7 @@ function removeListener(state, webhookNameOrNames, handler2) {
 function createEventHandler(options) {
   const state = {
     hooks: {},
-    log: createLogger(options && options.log)
+    log: createLogger2(options && options.log)
   };
   if (options && options.transform) {
     state.transform = options.transform;
@@ -8707,18 +7859,19 @@ function createEventHandler(options) {
   };
 }
 async function verifyAndReceive(state, event) {
-  const matchesSignature = await verify(
+  const matchesSignature = await verifyWithFallback(
     state.secret,
     event.payload,
-    event.signature
+    event.signature,
+    state.additionalSecrets
   ).catch(() => false);
   if (!matchesSignature) {
     const error = new Error(
       "[@octokit/webhooks] signature does not match event payload and secret"
     );
-    return state.eventHandler.receive(
-      Object.assign(error, { event, status: 400 })
-    );
+    error.event = event;
+    error.status = 400;
+    return state.eventHandler.receive(error);
   }
   let payload;
   try {
@@ -8734,142 +7887,232 @@ async function verifyAndReceive(state, event) {
     payload
   });
 }
+function normalizeTrailingSlashes(path) {
+  let i = path.length;
+  if (i === 0) {
+    return "/";
+  }
+  while (i > 0) {
+    if (path.charCodeAt(--i) !== 47) {
+      break;
+    }
+  }
+  if (i === -1) {
+    return "/";
+  }
+  return path.slice(0, i + 1);
+}
+var isApplicationJsonRE = /^\s*(application\/json)\s*(?:;|$)/u;
 var WEBHOOK_HEADERS = [
   "x-github-event",
   "x-hub-signature-256",
   "x-github-delivery"
 ];
-function getMissingHeaders(request2) {
-  return WEBHOOK_HEADERS.filter((header) => !(header in request2.headers));
+function createMiddleware(options) {
+  const { handleResponse: handleResponse3, getRequestHeader: getRequestHeader3, getPayload: getPayload3 } = options;
+  return function middleware2(webhooks2, options2) {
+    const middlewarePath = normalizeTrailingSlashes(options2.path);
+    return async function octokitWebhooksMiddleware(request2, response, next) {
+      let pathname;
+      try {
+        pathname = new URL(
+          normalizeTrailingSlashes(request2.url),
+          "http://localhost"
+        ).pathname;
+      } catch (error) {
+        return handleResponse3(
+          JSON.stringify({
+            error: `Request URL could not be parsed: ${request2.url}`
+          }),
+          422,
+          {
+            "content-type": "application/json"
+          },
+          response
+        );
+      }
+      if (pathname !== middlewarePath) {
+        next?.();
+        return handleResponse3(null);
+      } else if (request2.method !== "POST") {
+        return handleResponse3(
+          JSON.stringify({
+            error: `Unknown route: ${request2.method} ${pathname}`
+          }),
+          404,
+          {
+            "content-type": "application/json"
+          },
+          response
+        );
+      }
+      const contentType = getRequestHeader3(request2, "content-type");
+      if (typeof contentType !== "string" || !isApplicationJsonRE.test(contentType)) {
+        return handleResponse3(
+          JSON.stringify({
+            error: `Unsupported "Content-Type" header value. Must be "application/json"`
+          }),
+          415,
+          {
+            "content-type": "application/json",
+            accept: "application/json"
+          },
+          response
+        );
+      }
+      const missingHeaders = WEBHOOK_HEADERS.filter((header) => {
+        return getRequestHeader3(request2, header) == void 0;
+      }).join(", ");
+      if (missingHeaders) {
+        return handleResponse3(
+          JSON.stringify({
+            error: `Required headers missing: ${missingHeaders}`
+          }),
+          400,
+          {
+            "content-type": "application/json",
+            accept: "application/json"
+          },
+          response
+        );
+      }
+      const eventName = getRequestHeader3(
+        request2,
+        "x-github-event"
+      );
+      const signature = getRequestHeader3(request2, "x-hub-signature-256");
+      const id = getRequestHeader3(request2, "x-github-delivery");
+      options2.log.debug(`${eventName} event received (id: ${id})`);
+      let didTimeout = false;
+      let timeout;
+      const timeoutPromise = new Promise((resolve) => {
+        timeout = setTimeout(() => {
+          didTimeout = true;
+          resolve(
+            handleResponse3(
+              "still processing\n",
+              202,
+              {
+                "Content-Type": "text/plain",
+                accept: "application/json"
+              },
+              response
+            )
+          );
+        }, options2.timeout);
+      });
+      const processWebhook = async () => {
+        try {
+          const payload = await getPayload3(request2);
+          await webhooks2.verifyAndReceive({
+            id,
+            name: eventName,
+            payload,
+            signature
+          });
+          clearTimeout(timeout);
+          if (didTimeout) return handleResponse3(null);
+          return handleResponse3(
+            "ok\n",
+            200,
+            {
+              "content-type": "text/plain",
+              accept: "application/json"
+            },
+            response
+          );
+        } catch (error) {
+          clearTimeout(timeout);
+          if (didTimeout) return handleResponse3(null);
+          const err = Array.from(error.errors)[0];
+          const errorMessage = err.message ? `${err.name}: ${err.message}` : "Error: An Unspecified error occurred";
+          const statusCode = typeof err.status !== "undefined" ? err.status : 500;
+          options2.log.error(error);
+          return handleResponse3(
+            JSON.stringify({
+              error: errorMessage
+            }),
+            statusCode,
+            {
+              "content-type": "application/json",
+              accept: "application/json"
+            },
+            response
+          );
+        }
+      };
+      return await Promise.race([timeoutPromise, processWebhook()]);
+    };
+  };
 }
-function getPayload(request2) {
-  if (typeof request2.body === "object" && "rawBody" in request2 && request2.rawBody instanceof Buffer) {
-    return Promise.resolve(request2.rawBody.toString("utf8"));
-  } else if (typeof request2.body === "string") {
-    return Promise.resolve(request2.body);
+function handleResponse(body, status = 200, headers = {}, response) {
+  if (body === null) {
+    return false;
   }
+  headers["content-length"] = body.length.toString();
+  response.writeHead(status, headers).end(body);
+  return true;
+}
+function getRequestHeader(request2, key) {
+  return request2.headers[key];
+}
+function concatUint8Array(data) {
+  if (data.length === 0) {
+    return new Uint8Array(0);
+  }
+  let totalLength = 0;
+  for (let i = 0; i < data.length; i++) {
+    totalLength += data[i].length;
+  }
+  if (totalLength === 0) {
+    return new Uint8Array(0);
+  }
+  const result = new Uint8Array(totalLength);
+  let offset = 0;
+  for (let i = 0; i < data.length; i++) {
+    result.set(data[i], offset);
+    offset += data[i].length;
+  }
+  return result;
+}
+var textDecoder = new TextDecoder("utf-8", { fatal: false });
+var decode = textDecoder.decode.bind(textDecoder);
+async function getPayload(request2) {
+  if (typeof request2.body === "object" && "rawBody" in request2 && request2.rawBody instanceof Uint8Array) {
+    return decode(request2.rawBody);
+  } else if (typeof request2.body === "string") {
+    return request2.body;
+  }
+  const payload = await getPayloadFromRequestStream(request2);
+  return decode(payload);
+}
+function getPayloadFromRequestStream(request2) {
   return new Promise((resolve, reject) => {
     let data = [];
     request2.on(
       "error",
       (error) => reject(new AggregateError([error], error.message))
     );
-    request2.on("data", (chunk) => data.push(chunk));
-    request2.on(
-      "end",
-      () => (
-        // setImmediate improves the throughput by reducing the pressure from
-        // the event loop
-        setImmediate(
-          resolve,
-          data.length === 1 ? data[0].toString("utf8") : Buffer.concat(data).toString("utf8")
-        )
-      )
-    );
+    request2.on("data", data.push.bind(data));
+    request2.on("end", () => {
+      const result = concatUint8Array(data);
+      queueMicrotask(() => resolve(result));
+    });
   });
-}
-function onUnhandledRequestDefault(request2, response) {
-  response.writeHead(404, {
-    "content-type": "application/json"
-  });
-  response.end(
-    JSON.stringify({
-      error: `Unknown route: ${request2.method} ${request2.url}`
-    })
-  );
-}
-async function middleware(webhooks2, options, request2, response, next) {
-  let pathname;
-  try {
-    pathname = new URL(request2.url, "http://localhost").pathname;
-  } catch (error) {
-    response.writeHead(422, {
-      "content-type": "application/json"
-    });
-    response.end(
-      JSON.stringify({
-        error: `Request URL could not be parsed: ${request2.url}`
-      })
-    );
-    return true;
-  }
-  if (pathname !== options.path) {
-    next?.();
-    return false;
-  } else if (request2.method !== "POST") {
-    onUnhandledRequestDefault(request2, response);
-    return true;
-  }
-  if (!request2.headers["content-type"] || !request2.headers["content-type"].startsWith("application/json")) {
-    response.writeHead(415, {
-      "content-type": "application/json",
-      accept: "application/json"
-    });
-    response.end(
-      JSON.stringify({
-        error: `Unsupported "Content-Type" header value. Must be "application/json"`
-      })
-    );
-    return true;
-  }
-  const missingHeaders = getMissingHeaders(request2).join(", ");
-  if (missingHeaders) {
-    response.writeHead(400, {
-      "content-type": "application/json"
-    });
-    response.end(
-      JSON.stringify({
-        error: `Required headers missing: ${missingHeaders}`
-      })
-    );
-    return true;
-  }
-  const eventName = request2.headers["x-github-event"];
-  const signatureSHA256 = request2.headers["x-hub-signature-256"];
-  const id = request2.headers["x-github-delivery"];
-  options.log.debug(`${eventName} event received (id: ${id})`);
-  let didTimeout = false;
-  const timeout = setTimeout(() => {
-    didTimeout = true;
-    response.statusCode = 202;
-    response.end("still processing\n");
-  }, 9e3).unref();
-  try {
-    const payload = await getPayload(request2);
-    await webhooks2.verifyAndReceive({
-      id,
-      name: eventName,
-      payload,
-      signature: signatureSHA256
-    });
-    clearTimeout(timeout);
-    if (didTimeout)
-      return true;
-    response.end("ok\n");
-    return true;
-  } catch (error) {
-    clearTimeout(timeout);
-    if (didTimeout)
-      return true;
-    const err = Array.from(error.errors)[0];
-    const errorMessage = err.message ? `${err.name}: ${err.message}` : "Error: An Unspecified error occurred";
-    response.statusCode = typeof err.status !== "undefined" ? err.status : 500;
-    options.log.error(error);
-    response.end(
-      JSON.stringify({
-        error: errorMessage
-      })
-    );
-    return true;
-  }
 }
 function createNodeMiddleware2(webhooks2, {
   path = "/api/github/webhooks",
-  log = createLogger()
+  log = createLogger2(),
+  timeout = 9e3
 } = {}) {
-  return middleware.bind(null, webhooks2, {
+  return createMiddleware({
+    handleResponse,
+    getRequestHeader,
+    getPayload
+  })(webhooks2, {
     path,
-    log
+    log,
+    timeout
   });
 }
 var Webhooks = class {
@@ -8888,8 +8131,9 @@ var Webhooks = class {
     const state = {
       eventHandler: createEventHandler(options),
       secret: options.secret,
+      additionalSecrets: options.additionalSecrets,
       hooks: {},
-      log: createLogger(options.log)
+      log: createLogger2(options.log)
     };
     this.sign = sign.bind(null, options.secret);
     this.verify = verify.bind(null, options.secret);
@@ -8903,7 +8147,7 @@ var Webhooks = class {
 };
 
 // node_modules/@octokit/app/dist-node/index.js
-var VERSION15 = "15.1.0";
+var VERSION15 = "16.0.1";
 function webhooks(appOctokit, options) {
   return new Webhooks({
     secret: options.secret,
@@ -9092,14 +8336,14 @@ function createNodeMiddleware3(app, options = {}) {
   const oauthMiddleware = createNodeMiddleware(app.oauth, {
     pathPrefix: optionsWithDefaults.pathPrefix + "/oauth"
   });
-  return middleware2.bind(
+  return middleware.bind(
     null,
     optionsWithDefaults.pathPrefix,
     webhooksMiddleware,
     oauthMiddleware
   );
 }
-async function middleware2(pathPrefix, webhooksMiddleware, oauthMiddleware, request2, response, next) {
+async function middleware(pathPrefix, webhooksMiddleware, oauthMiddleware, request2, response, next) {
   const { pathname } = new URL(request2.url, "http://localhost");
   if (pathname.startsWith(`${pathPrefix}/`)) {
     if (pathname === `${pathPrefix}/webhooks`) {
@@ -9150,11 +8394,14 @@ var App = class {
         clientSecret: options.oauth.clientSecret
       } : {}
     );
-    this.octokit = new Octokit3({
+    const octokitOptions = {
       authStrategy: createAppAuth,
-      auth: authOptions,
-      log: options.log
-    });
+      auth: authOptions
+    };
+    if ("log" in options && typeof options.log !== "undefined") {
+      octokitOptions.log = options.log;
+    }
+    this.octokit = new Octokit3(octokitOptions);
     this.log = Object.assign(
       {
         debug: () => {
@@ -9247,3 +8494,14 @@ var OAuthApp2 = OAuthApp.defaults({ Octokit: Octokit2 });
   RequestError,
   createNodeMiddleware
 });
+/*! Bundled license information:
+
+toad-cache/dist/toad-cache.mjs:
+  (**
+   * toad-cache
+   *
+   * @copyright 2024 Igor Savin <kibertoad@gmail.com>
+   * @license MIT
+   * @version 3.7.0
+   *)
+*/
